@@ -1,6 +1,6 @@
 ---
 name: codex-cli
-description: This skill should be used whenever the user mentions Codex CLI (including "codex", "openai codex cli", or "codex cli") or asks anything about Codex CLI setup, installation, authentication, configuration, config setting file options, model/provider configuration, commands, non-interactive usage, approvals, sandboxing, MCP/tools, AGENTS.md/skills integration, security, or troubleshooting.
+description: This skill should be used whenever the user mentions Codex CLI (including "codex", "openai codex cli", "codex cli", or "gpt coding tool") or asks anything about Codex CLI setup, installation, authentication, configuration, config setting file options, model/provider configuration, commands, non-interactive usage, approvals, sandboxing, MCP/tools, AGENTS.md/skills integration, security, or troubleshooting.
 version: 1.0.0
 ---
 
