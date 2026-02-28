@@ -1,6 +1,6 @@
 ---
 name: codex-cli
-description: This skill should be used when the user asks to "use Codex CLI", "configure Codex CLI", "set up codex", "fix Codex config", "add MCP to Codex", "create Codex profiles", "run codex exec", "understand Codex approvals", "understand Codex sandbox", or needs official OpenAI Codex CLI guidance, config file options, authentication, automation, skills, agents, MCP, or troubleshooting.
+description: This skill should be used when the user asks to "use Codex CLI", "configure Codex CLI", "set up codex", "fix Codex config", "add custom API provider", "add custom model provider", "configure model_providers", "set codex base_url", "set env_key", "add provider 'rc' for codex cli", "add MCP to Codex", "create Codex profiles", "run codex exec", "understand Codex approvals", "understand Codex sandbox", or needs official OpenAI Codex CLI guidance for installation, authentication, config setting file options, provider setup, automation, skills, agents, MCP, security, or troubleshooting.
 version: 1.0.0
 ---
 
