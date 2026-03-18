@@ -1,6 +1,6 @@
 ---
 name: outline-cli
-description: Use the local Outline CLI (`outline-cli`, legacy alias `outline-agent`) for deterministic, token-efficient Outline workflows. Trigger when tasks involve profile setup, tool contract discovery, searching/listing/reading docs or collections, safe mutations (revision guards + `performAction`), delete read-token flow, templates/comments/shares/revisions lifecycle, graph or issue-link analysis, federated sync/ACL snapshots, or workspace admin wrappers.
+description: Search, read, and update company documentation in Outline wiki. Use this skill whenever the user asks to search docs, find documentation, look up a handbook, check the wiki, ask "what do our docs say about X", read a doc page, update/edit a document, find information in Outline, browse collections, or reference any company knowledge base content. Also triggers on mentions of specific doc names (e.g. "Navigos handbook", "onboarding guide", "runbook"), requests to create/delete/template docs, review comments, trace issue links, audit permissions, or sync content. Powered by the local `outline-cli` binary (legacy alias `outline-agent`) with revision-safe mutations, batch operations, and federated sync.
 ---
 
 # Goal
