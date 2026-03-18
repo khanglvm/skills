@@ -105,12 +105,39 @@ Execute Outline operations with low-token calls, explicit safety gates, and repr
   outline-cli tools help ai-skills --view full
   ```
 
+# Source References (MANDATORY)
+
+Every response that presents information retrieved from Outline **MUST** include source references linking back to the original documents.
+
+## How to Build Source Links
+- The base URL comes from `team.url` in the `profile test` or `auth.info` response (e.g. `https://handbook.navigosgroup.site`).
+- `view:"full"` returns a `url` field (e.g. `/doc/some-title-s51py6qL8O`) — construct: `{baseUrl}{url}`.
+- `view:"summary"` returns only `urlId` (e.g. `s51py6qL8O`) — construct: `{baseUrl}/doc/{urlId}`.
+- When using `search.research` or `documents.search`, extract `urlId` from each result in the merged/expanded arrays.
+
+## How to Present Source Links
+Append a **Sources** section at the end of the response:
+
+```
+**Sources:**
+- [Document Title](https://handbook.navigosgroup.site/doc/urlId)
+- [Another Document](https://handbook.navigosgroup.site/doc/urlId2)
+```
+
+Rules:
+- Include ALL documents that contributed information to the response.
+- Use the document `title` as link text, not raw IDs.
+- When multiple sections from the same document are cited, list it once.
+- When answering from a single document, still include the source link.
+- Extract `title` + `urlId` during retrieval — do not make extra API calls just for references.
+
 # Constraints
 - Never run mutating operations without explicit `performAction:true`.
 - Never delete without a fresh read token from `documents.info armDelete:true`.
 - Never default to `view:"full"` for discovery.
 - Never assume profile context; verify `profile list/test` + `auth.info`.
 - Never hardcode old contracts; refresh with `tools contract all` before long automation runs.
+- Never present Outline data to the user without source reference links.
 
 # Examples
 
