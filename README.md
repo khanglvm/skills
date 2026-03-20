@@ -9,6 +9,7 @@ Dedicated repository for reusable coding skills.
 - `codex-cli`: provides official Codex CLI guidance for installation, authentication, config options, usage, approvals/sandbox, MCP integration, and troubleshooting.
 - `outline-cli`: operate the Outline API CLI with deterministic, token-efficient, and safety-gated workflows (search/read/update/patch/delete).
 - `jira-mcp`: expert guide for using the Jira MCP server with self-hosted Jira Server 7.x — JQL reference, gotcha prevention (`statusCategory` vs `status` vs `type`), transition workflows, and response formatting with clickable ticket links.
+- `llm-router`: unified LLM gateway skill — teaches agents how to connect to a running llr instance, use model aliases, design multi-model agent architectures with fallback/load balancing/rate limiting across OpenAI/Anthropic/Gemini/OpenRouter providers.
 
 Install with:
 
@@ -18,6 +19,7 @@ npx skills add khanglvm/skills/fix-codex-skill
 npx skills add khanglvm/skills/codex-cli
 npx skills add khanglvm/skills/outline-cli
 npx skills add khanglvm/skills/jira-mcp
+npx skills add khanglvm/skills/llm-router
 
 # Or install from repo root with skill filter:
 npx skills add https://github.com/khanglvm/skills --skill jira-mcp
