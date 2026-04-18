@@ -1,0 +1,4 @@
+interface:
+  display_name: "Handoff"
+  short_description: "Create detailed session handoff notes for continuation"
+  default_prompt: "Use $handoff to generate a full-fidelity conversation handoff. Print it in chat by default, or write it to a file when the user requests a saved handoff."
