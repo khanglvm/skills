@@ -1,40 +1,50 @@
 ---
 name: outline-cli
-description: Search, read, and update company documentation in Outline wiki. Use this skill whenever the user asks to search docs, find documentation, look up a handbook, check the wiki, ask "what do our docs say about X", read a doc page, update/edit a document, find information in Outline, browse collections, or reference any company knowledge base content. Also triggers on mentions of specific doc names (e.g. "Navigos handbook", "onboarding guide", "runbook"), requests to create/delete/template docs, review comments, trace issue links, audit permissions, or sync content. Powered by the local `outline-cli` binary (legacy alias `outline-agent`) with revision-safe mutations, batch operations, and federated sync.
+description: Use the local Outline CLI (`outline-cli`, legacy alias `outline-agent`) to search, read, update, and operate Outline workspaces through deterministic API calls. Trigger when tasks involve company docs/wiki/handbook lookup, specific document names, collections, comments, attachments/images/files, shares, templates, permissions, federated sync, or document create/update/delete workflows, especially when token-efficient `ids/summary` views, profile routing, action gates (`performAction`), delete read tokens, or temp-file offload are relevant.
 ---
 
 # Goal
-Execute Outline operations with low-token calls, explicit safety gates, and reproducible machine-readable output.
+Execute Outline workflows with low-token, machine-readable CLI calls while keeping mutation and delete safety guarantees intact.
 
 # Instructions
 
-## Command Surface
-- Use `outline-cli` by default.
-- Accept `outline-agent` only when the user explicitly asks for that alias.
-- Prefer `invoke` + structured JSON args, then `batch` for multi-step operations.
+## Command Policy
+- Prefer `outline-cli` in all commands.
+- Accept `outline-agent` only when the user explicitly uses that alias.
+- Prefer `invoke`/`batch` with structured JSON arguments instead of ad-hoc shell parsing.
 
-## Session Bootstrap (Always)
-1. Verify binary and help surfaces:
+## Session Bootstrap (Only When Needed)
+1. Verify CLI availability or existing setup only when the session is new or commands are failing:
    ```bash
    outline-cli --version
-   outline-cli tools help --view summary
+   outline-cli profile list
    ```
-2. Refresh source-of-truth contracts:
+2. Load onboarding/help only when setup is missing, auth is failing, or you truly do not know the tool surface yet:
    ```bash
+   outline-cli tools help quick-start-agent --view full
    outline-cli tools contract all --result-mode inline
    ```
-3. Verify profile/auth before any mutation:
+3. Confirm profile access before mutations or when auth is suspicious:
    ```bash
-   outline-cli profile list --pretty
    outline-cli profile test
    outline-cli invoke auth.info --args '{"view":"summary"}'
    ```
 
-## Capability Map (Use Minimal Tooling)
+## Native First-Call Workflow
+1. For knowledge lookup, prefer one-call retrieval tools first:
+   - `search.research` for multi-query evidence gathering.
+   - `documents.answer` for scoped question answering.
+   - `documents.search` for direct title/semantic lookup.
+2. Use `batch` for independent reads instead of sequential loops.
+3. Open `tools help` or `tools contract` only after a validation failure or when the needed capability is still unclear.
+
+## Capability Map
 - Retrieval and navigation:
   - `documents.search`, `documents.list`, `documents.info`, `documents.resolve`, `documents.resolve_urls`, `documents.canonicalize_candidates`
   - `collections.list`, `collections.info`, `collections.tree`
   - `search.expand`, `search.research`
+- Embedded files and images:
+  - `documents.attachments`, `attachments.download`, `documents.download_attachments`
 - Safe document mutation:
   - `documents.update`, `documents.safe_update`, `documents.diff`, `documents.apply_patch`, `documents.apply_patch_safe`, `documents.batch_update`
   - `documents.plan_batch_update`, `documents.plan_terminology_refactor`, `documents.apply_batch_plan`
@@ -50,43 +60,63 @@ Execute Outline operations with low-token calls, explicit safety gates, and repr
   - `oauth_clients.*`, `oauth_authentications.*`, `oauthClients.delete`, `oauthAuthentications.delete`
   - `webhooks.*`, `file_operations.*`, `documents.import_file`, `documents.create_from_template`, `documents.cleanup_test`
 - Escape hatch:
-  - `api.call` for endpoints not yet wrapped as dedicated tools.
+  - `api.call` for JSON RPC endpoints that do not yet have dedicated tools. Do not use it for binary endpoints.
 
-## Retrieval-First Pattern (Default)
-1. Discover candidates with `view:"ids"` or `view:"summary"`.
-2. Hydrate only selected IDs (`documents.info` / `collections.info`).
-3. Escalate to `view:"full"` only for final documents that require full text.
-4. Prefer multi-query/multi-id args (`queries[]`, `ids[]`) over repetitive single calls.
+## Retrieval Workflow (Default Read Path)
+1. Resolve candidates cheaply with `view:"ids"` or `view:"summary"`:
+   - `documents.search`, `documents.list`, `collections.list`, `documents.resolve`.
+2. Hydrate only selected IDs:
+   - `documents.info`, `collections.info`.
+3. Escalate to `view:"full"` only for final documents that truly need full body text.
+4. Keep `includePolicies:false` unless policy decisions are required.
+5. For embedded document files/images, use attachment-aware tools instead of raw binary endpoints:
+   - `documents.attachments` to list `/api/attachments.redirect?id=...` references.
+   - `attachments.download` to save one attachment/image locally.
+   - `documents.download_attachments` to save all embedded files from a document.
+   Do not call `attachments.redirect` through `api.call`; it returns binary bytes, not JSON.
 
-## Mutation Pattern (Safe + Explicit)
-1. Read current state first.
-2. Use minimal edits (`append`/`prepend`, patch, or targeted update).
-3. Use revision guards (`expectedRevision`) for concurrent environments.
-4. Set `performAction:true` only on the final confirmed mutation call.
-5. Verify via read-back and, for high-impact flows, `events.list`/`revisions.list`.
+## Mutation Workflow (Safe + Explicit)
+1. Read current state first (`documents.info`/`collections.info`).
+2. Prefer minimal edits:
+   - text increments via `editMode:"append"|"prepend"`, or
+   - patch-based changes via `documents.apply_patch_safe`.
+3. For revision-sensitive automation, use optimistic concurrency:
+   - `documents.safe_update` or `documents.apply_patch_safe` with `expectedRevision`.
+4. Pass `performAction:true` only on the final, intentional mutation call.
 
-## Delete Pattern (Mandatory)
+## Delete Workflow (Mandatory Safe Flow)
 1. Arm delete read:
    ```bash
    outline-cli invoke documents.info --args '{"id":"<doc-id>","armDelete":true,"view":"summary"}'
    ```
 2. Extract `deleteReadReceipt.token`.
-3. Execute delete:
+3. Delete with token + explicit action:
    ```bash
    outline-cli invoke documents.delete --args '{"id":"<doc-id>","readToken":"<token>","performAction":true}'
    ```
 4. If token is stale/mismatched/expired, re-run step 1 immediately and retry once.
 
-## Output and Token Controls
-- Formats:
-  - `--output json` (default)
-  - `--output ndjson` for stream-friendly automation
-- Result modes:
-  - `--result-mode auto` (default offload when payload is large)
-  - `--result-mode inline`
-  - `--result-mode file`
-- Use `--args-file` / `--ops-file` for large payloads.
-- If output is offloaded, inspect only required fields:
+## Batch and Token Efficiency
+- Batch independent reads and planning operations:
+  ```bash
+  outline-cli batch --ops '[
+    {"tool":"collections.list","args":{"limit":10,"view":"summary"}},
+    {"tool":"documents.search","args":{"query":"incident","limit":8,"view":"ids"}}
+  ]'
+  ```
+- Prefer `queries[]`/`ids[]` tool arguments over repeated single calls.
+- Use `--args-file` or `--ops-file` for long payloads.
+- Keep responses compact and deterministic; avoid loading full document text unless needed.
+
+## Output Handling
+- Output format:
+  - default JSON (`--output json`)
+  - stream-friendly mode (`--output ndjson`)
+- Result mode:
+  - `auto` (default): inline until large payloads offload to temp files
+  - `inline`: always inline
+  - `file`: always temp file pointer
+- When offloaded, inspect only required fields:
   ```bash
   outline-cli tmp cat /absolute/path/from/result.json
   ```
@@ -95,84 +125,56 @@ Execute Outline operations with low-token calls, explicit safety gates, and repr
   outline-cli tmp gc --older-than-hours 24
   ```
 
-## Built-in Agent Guidance
-- Beginner onboarding playbook:
-  ```bash
-  outline-cli tools help quick-start-agent --view full
-  ```
-- Scenario playbooks (14 workflows):
-  ```bash
-  outline-cli tools help ai-skills --view full
-  ```
+## Tool Selection Hints
+- Fuzzy title/semantic resolution: `documents.resolve`, `documents.resolve_urls`
+- Search + hydrate in one call: `search.expand`, `search.research`
+- Embedded images/files: `documents.attachments`, `attachments.download`, `documents.download_attachments`
+- Minimal diff planning before write: `documents.diff`, `documents.plan_batch_update`
+- Safer patch writes: `documents.apply_patch_safe`
+- Capability checks before multi-step plans: `capabilities.map`
 
-# Source References (MANDATORY)
+## Source References
+Every response that presents information retrieved from Outline must include source references linking back to the original document(s).
 
-Every response that presents information retrieved from Outline **MUST** include source references linking back to the original documents.
+Build links from available fields:
+- Prefer full document `url`: `{baseUrl}{url}`.
+- If only `urlId` is available: `{baseUrl}/doc/{urlId}`.
+- The `baseUrl` comes from the selected profile or `auth.info`/`profile test` team URL.
 
-## How to Build Source Links
-- The base URL comes from `team.url` in the `profile test` or `auth.info` response (e.g. `https://handbook.navigosgroup.site`).
-- `view:"full"` returns a `url` field (e.g. `/doc/some-title-s51py6qL8O`) — construct: `{baseUrl}{url}`.
-- `view:"summary"` returns only `urlId` (e.g. `s51py6qL8O`) — construct: `{baseUrl}/doc/{urlId}`.
-- When using `search.research` or `documents.search`, extract `urlId` from each result in the merged/expanded arrays.
+Present a compact `Sources` section using document titles as link text. List each contributing document once.
 
-## How to Present Source Links
-Append a **Sources** section at the end of the response:
-
-```
-**Sources:**
-- [Document Title](https://handbook.navigosgroup.site/doc/urlId)
-- [Another Document](https://handbook.navigosgroup.site/doc/urlId2)
-```
-
-Rules:
-- Include ALL documents that contributed information to the response.
-- Use the document `title` as link text, not raw IDs.
-- When multiple sections from the same document are cited, list it once.
-- When answering from a single document, still include the source link.
-- Extract `title` + `urlId` during retrieval — do not make extra API calls just for references.
-
-# Constraints
-- Never run mutating operations without explicit `performAction:true`.
-- Never delete without a fresh read token from `documents.info armDelete:true`.
-- Never default to `view:"full"` for discovery.
-- Never assume profile context; verify `profile list/test` + `auth.info`.
-- Never hardcode old contracts; refresh with `tools contract all` before long automation runs.
-- Never present Outline data to the user without source reference links.
+## Constraints
+- Never run mutating calls without explicit `performAction:true`.
+- Never delete without a fresh `readToken` from `documents.info armDelete:true`.
+- Never default to `view:"full"` for discovery/exploration.
+- Do not read onboarding/help docs when a working profile already exists and the task can be attempted directly.
+- If a direct call fails due to unknown tool or validation issues, use the CLI's error suggestions before falling back to docs.
+- Never send oversized inline markdown when `--args-file` is cleaner and less error-prone.
+- Never present Outline-derived facts without source references.
 
 # Examples
 
-## Example 1: Research retrieval in one call
+## Example 1: Low-token discovery then targeted hydrate
 ```bash
-outline-cli invoke search.research --args '{
-  "question": "How do we run incident communication and escalation?",
-  "queries": ["incident comms", "escalation matrix"],
-  "precisionMode": "precision",
-  "limitPerQuery": 8,
-  "perQueryView": "ids",
-  "perQueryHitLimit": 4,
-  "expandLimit": 4,
-  "view": "summary"
+outline-cli invoke documents.search --args '{
+  "queries": ["incident process", "escalation matrix"],
+  "mode": "semantic",
+  "limit": 8,
+  "merge": true,
+  "view": "ids"
+}'
+
+outline-cli invoke documents.info --args '{
+  "ids": ["doc-a", "doc-b"],
+  "view": "summary",
+  "concurrency": 3
 }'
 ```
 
-## Example 2: Template placeholder extraction + strict instantiation
-```bash
-outline-cli invoke templates.extract_placeholders --args '{"id":"template-id"}'
-
-outline-cli invoke documents.create_from_template --args '{
-  "templateId": "template-id",
-  "title": "Service A - Incident Postmortem",
-  "placeholderValues": {"service_name":"Service A","owner":"SRE Team"},
-  "strictPlaceholders": true,
-  "publish": true,
-  "performAction": true,
-  "view": "summary"
-}'
-```
-
-## Example 3: Safe patch update with revision guard
+## Example 2: Safe revision-guarded patch update
 ```bash
 outline-cli invoke documents.info --args '{"id":"doc-a","view":"summary"}'
+# capture revision from result.items[0].document.revision
 
 outline-cli invoke documents.apply_patch_safe --args '{
   "id": "doc-a",
@@ -184,22 +186,30 @@ outline-cli invoke documents.apply_patch_safe --args '{
 }'
 ```
 
-## Example 4: Federated sync + ACL snapshot
+## Example 3: Safe delete with read receipt
 ```bash
-outline-cli invoke federated.sync_manifest --args '{
-  "collectionId": "collection-id",
-  "since": "2026-03-01T00:00:00.000Z",
-  "limit": 100,
-  "offset": 0
+outline-cli invoke documents.info --args '{"id":"doc-a","armDelete":true,"view":"summary"}'
+
+outline-cli invoke documents.delete --args '{
+  "id": "doc-a",
+  "readToken": "<deleteReadReceipt.token>",
+  "performAction": true
+}'
+```
+
+## Example 4: Embedded image/file download
+```bash
+outline-cli invoke documents.attachments --args '{
+  "url": "https://handbook.example.com/doc/example-title-AbCdEf1234"
 }'
 
-outline-cli invoke federated.permission_snapshot --args '{
-  "ids": ["doc-1", "doc-2"],
-  "includeDocumentMemberships": true,
-  "includeCollectionMemberships": true
+outline-cli invoke documents.download_attachments --args '{
+  "url": "https://handbook.example.com/doc/example-title-AbCdEf1234",
+  "outputDir": "./outline-attachments",
+  "overwrite": true
 }'
 ```
 
 # Read Next
-Load command recipes only when needed:
+Load additional patterns only when needed:
 - `references/tool-playbook.md`

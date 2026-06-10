@@ -1,6 +1,6 @@
 # Tool Playbook
 
-Use this file for concrete command recipes after loading `SKILL.md`.
+Use this file for concrete command recipes after reading `SKILL.md`.
 
 ## Contract Discovery (Source of Truth)
 ```bash
@@ -16,14 +16,14 @@ outline-cli tools contract all --result-mode inline | jq -r '.contract[].name'
 ```bash
 outline-cli --version
 outline-cli tools help --view summary
-outline-cli profile list --pretty
+outline-cli profile list
 outline-cli profile test
 outline-cli invoke auth.info --args '{"view":"summary"}'
 ```
 
-## Retrieval Patterns
+## Low-Token Retrieval Patterns
 
-### Multi-query semantic retrieval
+### Multi-query semantic search (single call)
 ```bash
 outline-cli invoke documents.search --args '{
   "queries": ["incident process", "escalation policy", "postmortem template"],
@@ -31,6 +31,22 @@ outline-cli invoke documents.search --args '{
   "limit": 8,
   "view": "summary",
   "merge": true
+}'
+```
+
+### Resolve fuzzy references first, hydrate later
+```bash
+outline-cli invoke documents.resolve --args '{
+  "queries": ["oncall runbook", "incident comms"],
+  "limit": 6,
+  "strict": false,
+  "view": "ids"
+}'
+
+outline-cli invoke documents.info --args '{
+  "ids": ["doc-a", "doc-b", "doc-c"],
+  "view": "summary",
+  "concurrency": 4
 }'
 ```
 
@@ -55,12 +71,9 @@ outline-cli invoke search.research --args '{
   "question": "How do we run incident communication and escalation?",
   "queries": ["incident comms", "escalation matrix"],
   "precisionMode": "precision",
-  "perQueryView": "ids",
-  "perQueryHitLimit": 4,
+  "limitPerQuery": 8,
+  "expandLimit": 4,
   "evidencePerDocument": 3,
-  "expandLimit": 5,
-  "includeBacklinks": true,
-  "backlinksLimit": 3,
   "view": "summary"
 }'
 ```
@@ -74,6 +87,36 @@ outline-cli invoke documents.canonicalize_candidates --args '{
   "view": "summary"
 }'
 ```
+
+## Embedded Attachments and Images
+
+### List embedded attachment refs without downloading
+```bash
+outline-cli invoke documents.attachments --args '{
+  "url": "https://docs.example.com/doc/example-title-AbCd1234"
+}'
+```
+
+### Download all embedded images/files from a document
+```bash
+outline-cli invoke documents.download_attachments --args '{
+  "url": "https://docs.example.com/doc/example-title-AbCd1234",
+  "outputDir": "./outline-attachments",
+  "overwrite": true,
+  "concurrency": 2
+}'
+```
+
+### Download one attachment by id or redirect URL
+```bash
+outline-cli invoke attachments.download --args '{
+  "id": "15831936-7fef-4a58-b17b-121a65c3d787",
+  "outputDir": "./outline-attachments",
+  "overwrite": true
+}'
+```
+
+Do not use `api.call` for `attachments.redirect`; it returns binary bytes.
 
 ## Template Pipeline
 
@@ -228,7 +271,23 @@ outline-cli invoke documents.delete --args '{
 }'
 ```
 
-If delete fails with stale/expired token, repeat `documents.info armDelete:true` and retry once.
+If delete fails with stale/expired token, repeat the `documents.info armDelete:true` call and retry.
+
+## Batch Patterns
+
+### One-shot multi-tool batch
+```bash
+outline-cli batch --ops '[
+  {"tool":"collections.list","args":{"limit":10,"view":"summary"}},
+  {"tool":"documents.search","args":{"query":"oncall","view":"ids","limit":5}},
+  {"tool":"auth.info","args":{"view":"summary"}}
+]'
+```
+
+### Batch from file for larger plans
+```bash
+outline-cli batch --ops-file ./tmp/ops.json --output ndjson
+```
 
 ## Federated Sync and ACL Reconciliation
 ```bash
@@ -258,30 +317,6 @@ outline-cli invoke capabilities.map --args '{"includePolicies":true}'
 outline-cli invoke documents.users --args '{"id":"doc-a"}'
 outline-cli invoke collections.group_memberships --args '{"id":"collection-id"}'
 outline-cli invoke groups.memberships --args '{"id":"group-id"}'
-```
-
-## Batch Patterns
-
-### One-shot mixed batch
-```bash
-outline-cli batch --ops '[
-  {"tool":"collections.list","args":{"limit":10,"view":"summary"}},
-  {"tool":"documents.search","args":{"query":"incident","view":"ids","limit":8}},
-  {"tool":"capabilities.map","args":{"includePolicies":false}}
-]'
-```
-
-### Cross-profile batch operation
-```bash
-outline-cli batch --ops '[
-  {"profile":"prod","tool":"documents.search","args":{"query":"release checklist","view":"ids","limit":5}},
-  {"profile":"staging","tool":"documents.search","args":{"query":"release checklist","view":"ids","limit":5}}
-]'
-```
-
-### Batch from file for large plans
-```bash
-outline-cli batch --ops-file ./tmp/ops.json --output ndjson
 ```
 
 ## Import and File Operations
@@ -322,4 +357,4 @@ outline-cli tools help ai-skills --view full
 
 ## Alias Compatibility
 `outline-agent` points to the same binary as `outline-cli`.
-Prefer `outline-cli` for new scripts and instructions.
+Prefer `outline-cli` for new instructions and scripts.
