@@ -12,6 +12,10 @@ Dedicated repository for reusable coding skills.
 - `llm-router`: unified LLM gateway skill — teaches agents how to connect to a running llr instance, use model aliases, design multi-model agent architectures with fallback/load balancing/rate limiting across OpenAI/Anthropic/Gemini/OpenRouter providers.
 - `handoff`: generate a detailed continuation handoff for a fresh session or agent, either printed in chat or written to a file on request.
 
+## Integration bundles (not `skills add` — restore with their installer)
+
+- `cloak-agent-browser`: backup/restore of the **CloakBrowser × agent-browser** stealth browsing flow — the `cloak-agent-browser` bridge script, the customized `agent-browser`/`cloakbrowser` skill docs, the stealth serve backend, and the CLAUDE.md/Codex instruction blocks. Restore with `bash cloak-agent-browser/install.sh` (see [`cloak-agent-browser/README.md`](cloak-agent-browser/README.md)).
+
 Install with:
 
 ```bash

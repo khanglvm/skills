@@ -1,0 +1,251 @@
+#!/usr/bin/env bash
+# cloak-agent-browser — bridge that lets agent-browser drive a CloakBrowser
+# (stealth Chromium) instance over CDP.
+#
+# CloakBrowser owns the Chromium process (binary-level fingerprint patches +
+# humanize/proxy/geoip from the wrapper); agent-browser attaches via --cdp and
+# provides the agent-friendly tools (snapshot refs, click/fill, screenshot, …).
+#
+# Blessed one-liner (auto-starts the stealth browser if it isn't up yet):
+#   cloak-agent-browser ab -- open https://example.com
+#   cloak-agent-browser ab -- snapshot -i
+#   cloak-agent-browser stop
+set -euo pipefail
+
+DEFAULT_PORT=9340
+DEFAULT_SESSION=default
+DEFAULT_PROFILE=default
+PROFILE_ROOT="${HOME}/.cloakbrowser-profiles"
+PID_ROOT="/tmp"
+SKILL_SERVE="${HOME}/.agents/skills/cloakbrowser/scripts/serve.sh"
+
+usage() {
+  cat <<'EOF'
+cloak-agent-browser — agent-browser tools on a CloakBrowser (stealth) Chromium.
+
+Usage:
+  cloak-agent-browser ab [--port N] [--session NAME] -- <agent-browser args...>
+        Run an agent-browser command against the stealth browser. Auto-starts
+        CloakBrowser (profile=default, --humanize) on the port if not running,
+        and serializes concurrent CDP access with a lock. This is the default
+        entrypoint — prefer it over calling agent-browser --cdp by hand.
+
+  cloak-agent-browser start [--port N] [--profile NAME_OR_PATH] [--url URL]
+                            [--humanize] [--headed] [--proxy URL] [--geoip]
+        Explicitly start a stealth browser with specific flags (custom profile,
+        proxy, headed login, …). Idempotent: a later `ab` reuses it.
+
+  cloak-agent-browser py [<python args...>]
+        Print the CloakBrowser venv Python path, or exec it (for inline
+        Playwright-style scripts). Single source of truth for the interpreter.
+
+  cloak-agent-browser status [--port N]      # CDP /json/version for the port
+  cloak-agent-browser stop   [--port N]      # stop the stealth browser
+  cloak-agent-browser cdp    [--port N]      # print the matching --cdp flag
+
+Examples:
+  # Default shared stealth session — no explicit start needed:
+  cloak-agent-browser ab -- open https://example.com
+  cloak-agent-browser ab -- snapshot -i
+  cloak-agent-browser ab -- click @e1
+  cloak-agent-browser stop
+
+  # Separate identity/account → its own profile + port (start once, then ab):
+  cloak-agent-browser start --port 9341 --profile upwork --humanize
+  cloak-agent-browser ab --port 9341 --session upwork -- open https://www.upwork.com
+
+  # Manual login you want to watch, then hand back to the agent:
+  cloak-agent-browser start --profile bank --humanize --headed
+EOF
+}
+
+port_pid_file() {
+  echo "${PID_ROOT}/cloak-agent-browser-${1}.pid"
+}
+
+profile_path() {
+  local value="$1"
+  if [[ "$value" = /* || "$value" = .* || "$value" == *"/"* ]]; then
+    echo "$value"
+  else
+    echo "${PROFILE_ROOT}/${value}"
+  fi
+}
+
+is_listening() {
+  local port="$1"
+  curl -fsS --max-time 1 "http://127.0.0.1:${port}/json/version" >/dev/null 2>&1
+}
+
+wait_ready() {
+  local port="$1"
+  local i
+  for i in {1..40}; do
+    if is_listening "$port"; then
+      return 0
+    fi
+    sleep 0.25
+  done
+  return 1
+}
+
+resolve_py() {
+  if command -v cloakbrowser-python >/dev/null 2>&1; then
+    command -v cloakbrowser-python
+  elif [[ -x /usr/local/bin/cloakbrowser-python ]]; then
+    echo /usr/local/bin/cloakbrowser-python
+  elif command -v uv >/dev/null 2>&1 && [[ -x "$(uv tool dir)/cloakbrowser/bin/python" ]]; then
+    echo "$(uv tool dir)/cloakbrowser/bin/python"
+  else
+    return 1
+  fi
+}
+
+cmd_start() {
+  local port="$DEFAULT_PORT"
+  local profile=""
+  local url="about:blank"
+  local args=()
+
+  while [[ $# -gt 0 ]]; do
+    case "$1" in
+      --port) port="$2"; shift 2 ;;
+      --profile|--user-data-dir) profile="$(profile_path "$2")"; shift 2 ;;
+      --url) url="$2"; shift 2 ;;
+      --humanize|--headed|--geoip) args+=("$1"); shift ;;
+      --proxy) args+=("$1" "$2"); shift 2 ;;
+      -h|--help) usage; exit 0 ;;
+      *) echo "Unknown start option: $1" >&2; usage; exit 2 ;;
+    esac
+  done
+
+  if is_listening "$port"; then
+    echo "CloakBrowser CDP already listening on 127.0.0.1:${port}"
+    return 0
+  fi
+
+  if [[ ! -x "$SKILL_SERVE" ]]; then
+    echo "Missing CloakBrowser serve helper: $SKILL_SERVE" >&2
+    exit 1
+  fi
+
+  mkdir -p "$PROFILE_ROOT"
+  if [[ -n "$profile" ]]; then
+    mkdir -p "$profile"
+    args+=(--user-data-dir "$profile")
+  fi
+  args+=(--port "$port" --url "$url")
+
+  "$SKILL_SERVE" "${args[@]}"
+  cp /tmp/cloakserve.pid "$(port_pid_file "$port")" 2>/dev/null || true
+
+  if ! wait_ready "$port"; then
+    echo "CloakBrowser did not become ready on port ${port}; see /tmp/cloakserve.log" >&2
+    exit 1
+  fi
+
+  echo "Use: agent-browser --cdp ${port} --session ${DEFAULT_SESSION} <command>"
+}
+
+# Start a sensible default stealth browser if nothing is listening on the port.
+ensure_started() {
+  local port="$1"
+  if is_listening "$port"; then
+    return 0
+  fi
+  echo "cloak-agent-browser: no stealth browser on :${port}; auto-starting (profile=${DEFAULT_PROFILE}, --humanize)…" >&2
+  # Send the start banner to stderr so the agent-browser command's stdout stays clean.
+  cmd_start --port "$port" --profile "$DEFAULT_PROFILE" --humanize --url about:blank 1>&2
+}
+
+cmd_ab() {
+  local port="$DEFAULT_PORT"
+  local session="$DEFAULT_SESSION"
+  while [[ $# -gt 0 ]]; do
+    case "$1" in
+      --port) port="$2"; shift 2 ;;
+      --session) session="$2"; shift 2 ;;
+      --) shift; break ;;
+      -h|--help) usage; exit 0 ;;
+      *) break ;;
+    esac
+  done
+  if [[ $# -eq 0 ]]; then
+    echo "Missing agent-browser command after --" >&2
+    usage
+    exit 2
+  fi
+
+  ensure_started "$port"
+
+  local lock="/tmp/cloak-agent-browser-${port}.lock"
+  local waited=0
+  while ! mkdir "$lock" 2>/dev/null; do
+    waited=$((waited + 1))
+    if [[ "$waited" -gt 120 ]]; then
+      echo "Timed out waiting for ${lock}" >&2
+      exit 1
+    fi
+    sleep 0.25
+  done
+  local status=0
+  agent-browser --session "$session" --cdp "$port" "$@" || status=$?
+  rmdir "$lock" 2>/dev/null || true
+  return "$status"
+}
+
+cmd_py() {
+  local py
+  if ! py="$(resolve_py)"; then
+    echo "CloakBrowser Python not found. Install with: uv tool install cloakbrowser" >&2
+    exit 1
+  fi
+  if [[ $# -eq 0 ]]; then
+    echo "$py"
+  else
+    exec "$py" "$@"
+  fi
+}
+
+cmd_status() {
+  local port="$DEFAULT_PORT"
+  [[ "${1:-}" == "--port" ]] && port="$2"
+  if is_listening "$port"; then
+    curl -fsS "http://127.0.0.1:${port}/json/version"
+  else
+    echo "No CloakBrowser CDP listener on 127.0.0.1:${port}"
+    exit 1
+  fi
+}
+
+cmd_stop() {
+  local port="$DEFAULT_PORT"
+  [[ "${1:-}" == "--port" ]] && port="$2"
+  local pid_file
+  pid_file="$(port_pid_file "$port")"
+  if [[ -f "$pid_file" ]]; then
+    kill "$(cat "$pid_file")" 2>/dev/null || true
+    rm -f "$pid_file"
+  elif [[ -f /tmp/cloakserve.pid ]]; then
+    kill "$(cat /tmp/cloakserve.pid)" 2>/dev/null || true
+  fi
+  rm -rf "/tmp/cloak-agent-browser-${port}.lock"
+  echo "Stopped CloakBrowser CDP on port ${port}"
+}
+
+cmd_cdp() {
+  local port="$DEFAULT_PORT"
+  [[ "${1:-}" == "--port" ]] && port="$2"
+  echo "--cdp ${port}"
+}
+
+case "${1:-}" in
+  ab) shift; cmd_ab "$@" ;;
+  start) shift; cmd_start "$@" ;;
+  py) shift; cmd_py "$@" ;;
+  status) shift; cmd_status "$@" ;;
+  stop) shift; cmd_stop "$@" ;;
+  cdp) shift; cmd_cdp "$@" ;;
+  -h|--help|"") usage ;;
+  *) echo "Unknown command: $1" >&2; usage; exit 2 ;;
+esac
