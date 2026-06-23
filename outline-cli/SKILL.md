@@ -84,6 +84,47 @@ Execute Outline workflows with low-token, machine-readable CLI calls while keepi
    - `documents.safe_update` or `documents.apply_patch_safe` with `expectedRevision`.
 4. Pass `performAction:true` only on the final, intentional mutation call.
 
+## Commenting + @-mentions
+`comments.create` (and its alias `comments.post`) take a simple plain/markdown
+`text` and build Outline's ProseMirror `data` doc for you — you no longer
+hand-build mention nodes or discover that `data` (not `text`) is required.
+
+- **Plain comment** — pass `text`; blank lines split paragraphs, single newlines
+  become line breaks:
+  ```bash
+  outline-cli invoke comments.create \
+    --args '{"query":"incident runbook","text":"Looks good.","performAction":true}'
+  ```
+- **@-mentions** — pass `mentions` as a list of **names, emails, or userIds**.
+  Resolved mention nodes (with generated UUIDs) are inserted at the start of the
+  comment. Names match on **FIRST NAME + email**, so Jira-order
+  `"Tran Le Quan"` resolves to Outline's display `"Quan, Tran Le"`:
+  ```bash
+  outline-cli invoke comments.create \
+    --args '{"query":"incident runbook","text":"Please review the rollback steps.","mentions":["Tran Le Quan","alice@example.com"],"performAction":true}'
+  ```
+  - If a name is **ambiguous or unresolved**, the call errors clearly
+    (`MENTION_UNRESOLVED`) and lists candidates — disambiguate with an email or
+    userId.
+- **1000-char limit** — the comment TEXT is capped at 1000 characters and checked
+  pre-flight (`COMMENT_TOO_LONG`); the limit is on the text, not the JSON.
+- **Replies** — pass `parentCommentId` to reply to a comment:
+  ```bash
+  outline-cli invoke comments.post \
+    --args '{"documentId":"<doc-id>","parentCommentId":"<comment-id>","text":"Confirmed.","performAction":true}'
+  ```
+- **Read comments + replies** — use `comments.list` with `includeReplies:true`
+  to nest replies, or pass `parentCommentId` to fetch one thread's replies (e.g.
+  to re-read replies to a comment you posted):
+  ```bash
+  outline-cli invoke comments.list \
+    --args '{"query":"incident runbook","includeReplies":true,"view":"summary"}'
+  ```
+- **Advanced** — you may still pass a raw ProseMirror `data` doc to bypass text
+  building; resolved `mentions` are prepended to its first paragraph if provided.
+- All comment mutations are action-gated; set `performAction:true` only on the
+  final, intentional call.
+
 ## Delete Workflow (Mandatory Safe Flow)
 1. Arm delete read:
    ```bash
