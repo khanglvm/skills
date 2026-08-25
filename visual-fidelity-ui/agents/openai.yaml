@@ -1,0 +1,4 @@
+interface:
+  display_name: "Visual Fidelity UI"
+  short_description: "Match reference UI down to small visual details"
+  default_prompt: "Use $visual-fidelity-ui to implement and verify this frontend against the supplied visual references."
