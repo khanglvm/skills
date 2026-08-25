@@ -39,6 +39,7 @@ Binding:
 - surface palette, gradients, borders, radii, and stacking;
 - connector meaning and endpoint;
 - icon meaning and state.
+- ordinal or index labels only when the source requires them or they expose meaningful state.
 
 Adaptable:
 
@@ -70,3 +71,4 @@ Ask for every section:
 5. Do the text scale, weight, and line breaks express the same hierarchy?
 6. Do cards, icons, and comparisons preserve their intended positive/negative emphasis?
 7. Does the next section feel intentionally connected rather than hard-split?
+8. Does every visible number communicate sourced data or useful state? Remove ornamental `01 / 03`, section indices, and faux step counters.

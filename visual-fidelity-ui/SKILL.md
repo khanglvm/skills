@@ -50,6 +50,7 @@ For dense boards, divide the image into overlapping chunks. Do not approve detai
 - Reserve media geometry before load. Do not animate width, aspect ratio, or background size from an incorrect initial value.
 - Use gradients and overlays to support legibility without obscuring the product or meaningful people.
 - Keep fixed-size visual elements, such as reference chips and status icons, independent from fluid headline sizing.
+- Do not invent decorative ordinal labels such as `01 / 03`, `01—03`, section numbers, step counters, or slide indices to make a page feel editorial. Include them only when an authoritative source requires them or they communicate real sequence, position, progress, or navigation state.
 - Implement overlaps with explicit stacking order. Hover and entrance motion must not reverse the reference layering.
 - Use fluid type and spacing only inside bounded ranges that preserve the reference's line breaks and hierarchy.
 
@@ -80,6 +81,7 @@ Do not mark the work complete when any of these remain:
 - a connector terminates in empty space or points to the wrong mechanism;
 - a wide viewport exposes an uncovered background edge;
 - text weight, wrapping, contrast, or chip sizing materially drifts from the reference;
+- decorative indexing or counters were added without source authority or functional meaning;
 - overlapping cards have the wrong z-order, opacity, or merge behavior;
 - media changes size or crop on first scroll;
 - only a thumbnail, DOM snapshot, or single viewport was reviewed;
