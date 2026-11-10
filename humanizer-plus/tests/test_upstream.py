@@ -12,7 +12,7 @@ SKILL = Path(__file__).resolve().parent.parent
 CAPS = {
     'SKILL.md': 8 * 1024,
     'overrides/khang.md': 4 * 1024,
-    'languages/vi.md': 30 * 1024,
+    'languages/vi.md': 24 * 1024,
 }
 CARD_CAP = 5 * 1024
 CARD_HEADINGS = ['## Reader and purpose', '## Structure', '## Length and format',

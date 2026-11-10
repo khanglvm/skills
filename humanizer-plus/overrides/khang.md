@@ -8,6 +8,11 @@ These rules change named parts of `upstream/humanizer.md`. Where a rule here and
 
 The same reading applies wherever upstream says "know": in [upstream §14 Vague connection or association] and [upstream §17 Borrowed authority], you know a relationship or a source only when one of those inputs states it. Some upstream "After" examples add facts their "Before" lacks; treat them as examples of shape, never as permission.
 
+**Fidelity pass.** Run it first in [upstream: Check the draft], in every language. List each quantifier or frequency word (every, most, usually, a few), ranking (best, most useful), causal or derivation link (because, so, follows from), capability or guarantee (prevents, ensures, keeps X from) and claim about how someone works. Find the source line for each, at the same strength. Without one, cut it or restore the source's hedge. Done when every listed item has a line or is gone.
+- Source "returns matching pages" → not "returns every match".
+- Source "can stop before saving" → not "keeps it from saving over".
+- Source states A and B → not "B follows from A".
+
 **F2 Non-prose.** The File mode rule in [upstream: What to return] (keep code blocks, inline code, commands, paths, YAML metadata, data and link targets unchanged) applies in every mode. It also covers exact quotations, schemas and frontmatter keys.
 
 **F3 Authority.** Drafting or reviewing never authorizes sending, publishing, posting, committing or pushing. Write only to the files the task names.

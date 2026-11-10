@@ -4,14 +4,14 @@ Not for: PR descriptions and commit messages (`commit-pr`), external email (`ema
 
 ## Reader and purpose
 
-A colleague who must act: test, decide, unblock or pick up the work. They read the first line and skim the rest. Before a ticket comment, check the team's current channels and the ticket history for context, and use the people-in-charge the team has recorded. This card sets the wording; it grants no permission to post.
+A colleague who must act: test, decide, unblock or pick up the work. They read the first line and skim the rest. Before a ticket comment, read the ticket history and the team's or user's saved protocol (Knowledge preferences, project docs): comment markers, handbacks, status changes and owners come from there. This card sets the wording; it grants no permission to post.
 
 ## Structure
 
 - Lead with the result and the next action, then the owner and the link. One request per message when the reader must act.
 - Add a technical detail only when the recipient needs it to act or diagnose, or asks for it. Keep material blockers and uncertainty, and keep untested and blocked behaviour explicit.
 - A clarification names the concrete missing decision or reproduction data.
-- A handback is comment, status and verified owner together; a question alone is incomplete.
+- A handback follows the saved protocol. Without one, add no marker and state the status and next owner the ticket shows.
 - A section about handing work over describes what was checked and what is handed over, not an abstract conclusion.
 
 ## Length and format
@@ -19,7 +19,7 @@ A colleague who must act: test, decide, unblock or pick up the work. They read t
 - Routine hashes, build numbers and URLs, verification methods and counts, compression details and checksum lists stay in supporting records. Link the useful attachment or field contract instead of repeating it.
 - An API method and endpoint go in a code or noformat block with brace placeholders intact. An image gets a caption saying what it shows, not a raw attachment number.
 - After tagging a person, continue the message without repeating their name.
-- When the team's protocol marks agent-written comments (for example a fixed first line), follow it exactly, with a real newline after the marker, never a literal `\n`.
+- A saved protocol's format (such as a fixed first line) is followed exactly, with real newlines, never a literal `\n`.
 - Chat: one action per line; tag the person and say what to attach.
 
 ## Medium tells
@@ -43,10 +43,9 @@ A colleague who must act: test, decide, unblock or pick up the work. They read t
 
 ## Review checklist
 
-- Does the message start with the result, and does it follow the team's comment protocol?
+- Does the message start with the result and follow the saved protocol, if one exists?
 - Would the recipient need anything that is missing, or is anything there that they do not need?
 - Is every role named as the team says it, with no inferred honorific?
-- If this is a handback, are the status and owner set in the same step?
 
 ## Sources
 

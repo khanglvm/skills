@@ -563,6 +563,33 @@
    "source": "longhang2004/vietnamese-humanizer; haunguyendev/humanizer-vi"
   },
   {
+   "id": "VI-15f",
+   "name": "English skeleton",
+   "maps_to": null,
+   "kind": "regex",
+   "scope": "prose",
+   "strength": "medium",
+   "regex": "\\b(?:giới hạn|hạn chế|điểm yếu|nhược điểm) (?:nên|đáng) biết\\b|\\blà (?:một )?điều đáng có\\b|\\bnói (?:đúng )?(?:những gì|điều) (?:nó|chúng) (?:cần|phải|nên) nói\\b|\\bkhông vì thế mà đứng yên\\b",
+   "ignore_case": true,
+   "multiline": false,
+   "why": "English frame in Vietnamese words (worth knowing, worth having, say what it should, stand still).",
+   "fix": "Back-translate the sentence and rewrite it from its meaning.",
+   "examples": {
+    "hit": [
+     "Công cụ có một giới hạn nên biết: mỗi lần chỉ đọc 50 trang.",
+     "Việc agent tự chọn trang là điều đáng có.",
+     "Tài liệu có còn nói đúng những gì nó cần nói không?"
+    ],
+    "miss": [
+     "Những điều cần biết về kỳ thi năm nay.",
+     "Anh ấy luôn nói đúng những gì cần nói.",
+     "Bộ phim này đáng xem.",
+     "Điều đáng chú ý là số ca mắc giảm."
+    ]
+   },
+   "source": "blind A/B review of humanizer-plus drafts, 2026-11-10"
+  },
+  {
    "id": "VI-16a",
    "name": "Email and support calques",
    "maps_to": "[upstream §22 Chatbot residue]",

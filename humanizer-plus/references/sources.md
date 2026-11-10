@@ -27,6 +27,8 @@ Links to the material behind the Vietnamese layer, the cards and the linter. Not
 
 Fourteen articles published before November 2022, used for sentence and connector counts and for linter calibration. The texts are not in this repository.
 
+Counts (17,281 words, 536 paragraphs): median sentence about 28 words, 6% at 10 words or fewer; an adversative opened a sentence about once per 1,000 words; *Điều này* opened two sentences, *Ngoài ra/Bên cạnh đó* four, *không chỉ ... mà còn* appeared once; *Hơn nữa, Tóm lại, đóng vai trò quan trọng, một cách + adj* and `được ... bởi` never appeared. The linter finds no cluster in this corpus at the default doctype.
+
 - VnExpress: https://vnexpress.net/qua-roi-nam-2021-ky-la-4410513.html, https://vnexpress.net/anh-xe-om-mo-duong-cho-xe-cap-cuu-4143463.html, https://vnexpress.net/khoi-to-vu-an-lien-quan-viec-khai-tu-bo-me-chong-con-song-4327054.html
 - Znews: https://znews.vn/khoi-to-vu-an-tron-ve-gia-dinh-vo-lam-lay-dich-covid-19-post1274600.html, https://znews.vn/de-nghi-ky-luat-7-can-bo-dien-trung-uong-quan-ly-nhieu-lanh-dao-dnnn-post1247408.html, https://znews.vn/gioi-tre-thu-trao-luu-vu-tru-du-doan-2022-post1288249.html
 - VietNamNet: https://vietnamnet.vn/1-trieu-hoc-sinh-buoc-vao-ky-thi-tot-nghiep-thpt-2022-2036970.html
