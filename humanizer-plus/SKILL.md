@@ -76,7 +76,7 @@ The card and the language layer split their territory. The card owns structure, 
 - Pasted text mode only when the user asks for the draft and the remaining patterns.
 - Review mode, defined in `overrides/khang.md`, when the task is to review, check, critique or proofread. Its `Loaded:` line is part of the findings.
 
-In every other mode, report the `Loaded:` line to the caller beside the deliverable (in your message, after the text or the file summary), never inside the text, the file or the commit.
+In every other mode, when you work as a delegated child or the user asks, report the `Loaded:` line to the caller beside the deliverable (in your message, after the text or the file summary), never inside the text, the file or the commit.
 
 ## Vietnamese check
 

@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Flag Vietnamese AI-writing tells listed in languages/vi.md.
+"""Flag Vietnamese AI-writing tells listed in patterns/vi-tells.json.
 
 Usage: vi-tells.py [--json] [--patterns PATH] [--doctype DOCTYPE] [--include-quotes] FILE... | -
 

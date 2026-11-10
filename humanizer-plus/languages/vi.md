@@ -17,7 +17,7 @@ Done when every paragraph traces to a line from step 1 and no sentence keeps Eng
 
 ## 2. When to act: clusters
 
-One tell is weak evidence. Score each paragraph: strong 3, medium 2, weak 1. Linted strengths live only in `patterns/vi-tells.json`; the linter prints them. Judge an unlinted tell: strong when it bends meaning, register or a claim, weak for a lone connector or glue word, medium otherwise.
+One tell is weak evidence. Score each paragraph: strong 3, medium 2, weak 1. Strengths live only in `patterns/vi-tells.json` (manual entries too). For a tell it does not rate, judge: strong when it bends meaning, register or a claim, weak for a lone connector or glue word, medium otherwise.
 
 Act on a strong tell at once, a medium one when a second tell shares the paragraph or it repeats, a weak one only inside a cluster. Rewrite a paragraph scoring 3 or more; when two tells hit one sentence, rewrite it once from its meaning. Return natural input nearly unchanged and say so. When a fix would change meaning, register or a claim, comment to the author instead.
 

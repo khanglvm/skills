@@ -1389,28 +1389,28 @@
  ],
  "manual": [
   {
-   "id": "VI-12",
+   "id": "VI-12", "strength": "weak",
    "name": "Article and plural calque",
    "maps_to": null,
    "kind": "manual",
    "why": "Needs a reader: một and các/những are often correct."
   },
   {
-   "id": "VI-32",
+   "id": "VI-32", "strength": "medium",
    "name": "Chopped fragments",
    "maps_to": null,
    "kind": "manual",
    "why": "Needs a sentence splitter and a reader."
   },
   {
-   "id": "VI-33",
+   "id": "VI-33", "strength": "weak",
    "name": "Uniform rhythm and repeated openers",
    "maps_to": "[upstream §7 Repeated sentence openings]",
    "kind": "manual",
    "why": "Sentence-length variance per paragraph; judge by ear."
   },
   {
-   "id": "VI-40",
+   "id": "VI-40", "strength": "medium",
    "name": "Mixed or wrong address",
    "maps_to": null,
    "kind": "manual",
