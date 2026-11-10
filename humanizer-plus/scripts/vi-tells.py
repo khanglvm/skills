@@ -23,8 +23,13 @@ ID_RE = re.compile(r'^VI-\d\d[a-z]?$')
 
 MASKS = [
     re.compile(r'\A---\n.*?\n---[ \t]*(?:\n|\Z)', re.S),          # YAML frontmatter
-    re.compile(r'^(```|~~~).*?^\1[^\n]*$', re.S | re.M),          # fenced code
-    re.compile(r'`[^`\n]+`'),                                     # inline code
+    # fenced code: up to 3 spaces of indent (list items too); the closing fence uses
+    # the same character and is at least as long; an unclosed fence runs to the end;
+    # a backtick in the info string means inline code, not a fence (CommonMark)
+    re.compile(r'^ {0,3}(?P<f>(?P<c>[`~])(?P=c){2,})[^`\n]*(?:\n.*?)??'
+               r'(?:\n {0,3}(?P=f)(?P=c)*[ \t]*$|\Z)', re.S | re.M),
+    # inline code: the closing run of backticks matches the opening run's length
+    re.compile(r'(?<!`)(?P<t>`+)(?!`)(?:(?!\n[ \t]*\n).)+?(?<!`)(?P=t)(?!`)', re.S),
     re.compile(r'(?:https?://|www\.)[^\s<>()]+'),                 # URLs
     re.compile(r'(?<![\w/])(?:~|\.{1,2})?/(?:[\w.-]+/)*[\w.-]+'),  # absolute or ./ paths
     re.compile(r'(?<![\w/])[\w.-]+/[\w./-]*\.\w{1,6}\b'),         # relative paths with extension
@@ -32,7 +37,7 @@ MASKS = [
 ]
 QUOTE_MASKS = [
     re.compile(r'^[ \t]*>[^\n]*$', re.M),                         # blockquote lines
-    re.compile(r'“[^”]{0,600}”'),                                 # quoted speech
+    re.compile(r'“[^“”]*”'),                                      # quoted speech, any length
 ]
 
 
@@ -111,10 +116,13 @@ def mask(text, include_quotes=False):
 
     FILL instead of spaces keeps a masked quote or code span from looking like
     a stray space before the punctuation that follows it.
+
+    Each pattern runs on the text already masked by the ones before it, so a
+    backtick or quote inside code cannot open a span that reaches into prose.
     """
     chars = list(text)
     for pattern in MASKS + ([] if include_quotes else QUOTE_MASKS):
-        for match in pattern.finditer(text):
+        for match in pattern.finditer(''.join(chars)):
             for i in range(match.start(), match.end()):
                 if chars[i] != '\n':
                     chars[i] = FILL

@@ -13,5 +13,33 @@
       "source": "LICENSE",
       "sha256": "4ac4810254ab36d45419141aeb8e69bf50652cfafe5b2dab947d06d44e5cbf96"
     }
+  },
+  "sections": {
+    "1": "Not X but Y",
+    "2": "One-line closers and dramatic fragments",
+    "3": "Sayings that sound deep",
+    "4": "Staged run-up before the point",
+    "5": "Arguing with no one",
+    "6": "Forced triads",
+    "7": "Repeated sentence openings",
+    "8": "Dashes as the universal connector",
+    "9": "Stacked qualifiers",
+    "10": "Hyphenated pairs everywhere",
+    "11": "Passive voice and missing subjects",
+    "12": "Overused AI words",
+    "13": "Inflated significance",
+    "14": "Vague connection or association",
+    "15": "Shallow -ing phrases",
+    "16": "Sales language",
+    "17": "Borrowed authority",
+    "18": "Avoiding is, are, and has",
+    "19": "Bold as decoration",
+    "20": "Decorative headings",
+    "21": "Curly quotation marks",
+    "22": "Chatbot residue",
+    "23": "Knowledge-limit disclaimers and guesses",
+    "24": "A heading repeated in the first sentence",
+    "25": "Writing about the document instead of its subject",
+    "26": "Re-explaining what the reader knows"
   }
 }

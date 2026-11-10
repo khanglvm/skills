@@ -20,6 +20,7 @@ One person, or one group with one relationship to the sender, reading in an inbo
 - Dates, amounts and names exactly as the source gives them.
 - Attachments and links named for what they hold.
 - Plain text formatting unless the thread already uses rich text.
+- Lint a Vietnamese email to someone whose relation is unknown with `--doctype handoff`; it adds the inferred-honorific check (VI-41).
 
 ## Medium tells
 

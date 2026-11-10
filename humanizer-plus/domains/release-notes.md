@@ -34,7 +34,7 @@ Decide the reader first. User-facing notes describe what changed for the user; a
 - Drop *Hệ thống bổ sung ..., Chúng tôi vui mừng thông báo ...* in internal notes. Replace *cải thiện hiệu suất và trải nghiệm người dùng* with the concrete change (VI-20). *Sửa một số lỗi nhỏ* only when nothing more is known.
 - Dev terms follow the vi.md terms table: English in internal notes (*fix, deploy, endpoint*), Vietnamese nouns in consumer notes (*lỗi, tệp*).
 
-✗ Chúng tôi rất vui mừng giới thiệu bản cập nhật mới với nhiều cải tiến vượt trội, giúp nâng cao trải nghiệm người dùng một cách toàn diện.
+✗ Ngày 12/11/2026, chúng tôi rất vui mừng giới thiệu phiên bản 2.4 với nhiều cải tiến vượt trội: hỗ trợ xuất danh sách đơn hàng ra tệp CSV và khắc phục triệt để lỗi bộ lọc ngày bị mất khi chuyển trang, giúp nâng cao trải nghiệm người dùng một cách toàn diện.
 
 ✓
 ```

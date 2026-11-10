@@ -15,7 +15,7 @@
    "weak": 1
   },
   "cluster_threshold": 3,
-  "calibration": "Checked 2026-11-10 against 14 pre-2022 human news texts (17,281 words, 536 paragraphs): 0 paragraphs reached the threshold with the default prose doctype. Recall on agent-written news-style text is low by design; the agent reading vi.md is the main detector."
+  "calibration": "Checked 2026-11-10 against 14 pre-2022 human news texts (17,281 words, 536 paragraphs): 0 paragraphs reached the threshold with the default prose doctype. Recall on agent-written news-style text is low by design; the agent reading the catalogue is the main detector."
  },
  "patterns": [
   {
@@ -56,7 +56,9 @@
     "hit": [
      "Trong bài viết này, chúng ta sẽ cùng tìm hiểu cách cache hoạt động."
     ],
-    "miss": []
+    "miss": [
+     "Trong bài viết này có ba bảng số liệu về doanh thu."
+    ]
    },
    "source": "see references/sources.md"
   },
@@ -76,7 +78,9 @@
     "hit": [
      "Hãy cùng khám phá những tính năng mới nhất."
     ],
-    "miss": []
+    "miss": [
+     "Hãy cùng nhóm kiểm tra lại số liệu trước thứ Hai."
+    ]
    },
    "source": "see references/sources.md"
   },
@@ -96,7 +100,9 @@
     "hit": [
      "Bạn đã bao giờ tự hỏi vì sao trang tải chậm?"
     ],
-    "miss": []
+    "miss": [
+     "Bạn đã bao giờ đến Huế chưa?"
+    ]
    },
    "source": "see references/sources.md"
   },
@@ -116,7 +122,9 @@
     "hit": [
      "Dưới đây là một số lợi ích bạn nên biết."
     ],
-    "miss": []
+    "miss": [
+     "Bảng giá áp dụng từ 1/12 nằm dưới đây."
+    ]
    },
    "source": "see references/sources.md"
   },
@@ -136,7 +144,10 @@
     "hit": [
      "Tóm lại, đây là giải pháp đáng cân nhắc."
     ],
-    "miss": []
+    "miss": [
+     "Kết quả nhìn chung khớp với dự báo.",
+     "Tóm tắt kết quả quý III nằm ở bảng 2."
+    ]
    },
    "source": "see references/sources.md"
   },
@@ -156,7 +167,9 @@
     "hit": [
      "Hy vọng bài viết này hữu ích với bạn."
     ],
-    "miss": []
+    "miss": [
+     "Hy vọng của đội là vào vòng bán kết."
+    ]
    },
    "source": "see references/sources.md"
   },
@@ -176,7 +189,9 @@
     "hit": [
      "Vì vậy, mỗi chúng ta cần trân trọng lòng biết ơn."
     ],
-    "miss": []
+    "miss": [
+     "Mỗi người cần mang theo căn cước."
+    ]
    },
    "source": "see references/sources.md"
   },
@@ -196,7 +211,9 @@
     "hit": [
      "Trí tuệ nhân tạo sẽ tiếp tục thay đổi phương thức này trong tương lai gần."
     ],
-    "miss": []
+    "miss": [
+     "Nhà máy sẽ mở thêm dây chuyền trong tương lai gần, theo kế hoạch đã công bố."
+    ]
    },
    "source": "see references/sources.md"
   },
@@ -216,7 +233,9 @@
     "hit": [
      "Giỏi AI không phải là thuộc vài câu lệnh. Mà là biết đưa đúng bối cảnh."
     ],
-    "miss": []
+    "miss": [
+     "Đây không phải lỗi của máy chủ. Cấu hình đã sai từ trước."
+    ]
    },
    "source": "longhang2004/vietnamese-humanizer; Nghiện AI group post"
   },
@@ -236,7 +255,9 @@
     "hit": [
      "Sản phẩm không chỉ bền mà còn đẹp."
     ],
-    "miss": []
+    "miss": [
+     "Sản phẩm không chỉ có một màu."
+    ]
    },
    "source": "longhang2004/vietnamese-humanizer; Nghiện AI group post"
   },
@@ -256,7 +277,9 @@
     "hit": [
      "Đây không phải là chuyện tiền bạc mà là chuyện đam mê."
     ],
-    "miss": []
+    "miss": [
+     "Đây không phải là lỗi, mà do cấu hình."
+    ]
    },
    "source": "longhang2004/vietnamese-humanizer; Nghiện AI group post"
   },
@@ -276,7 +299,9 @@
     "hit": [
      "Điều thú vị là công cụ này chạy hoàn toàn offline."
     ],
-    "miss": []
+    "miss": [
+     "Lưu ý: tắt nguồn trước khi tháo pin."
+    ]
    },
    "source": "see references/sources.md"
   },
@@ -296,7 +321,9 @@
     "hit": [
      "Nói thẳng. Một chuẩn giao tiếp."
     ],
-    "miss": []
+    "miss": [
+     "Nói thật với bạn rằng tôi chưa đọc bản này."
+    ]
    },
    "source": "Nghiện AI group post"
   },
@@ -316,7 +343,9 @@
     "hit": [
      "Sau một thời gian dùng AI để code, tôi nhận ra một điều."
     ],
-    "miss": []
+    "miss": [
+     "Sau một thời gian dùng thử 30 ngày, ứng dụng tính phí 99.000 đồng/tháng."
+    ]
    },
    "source": "Nghiện AI group post"
   },
@@ -358,7 +387,9 @@
     "hit": [
      "Nhóm tiến hành việc gửi bản nháp để thực hiện việc lấy ý kiến."
     ],
-    "miss": []
+    "miss": [
+     "Cơ quan điều tra đã tiến hành khám xét nhà."
+    ]
    },
    "source": "longhang2004/vietnamese-humanizer"
   },
@@ -378,7 +409,9 @@
     "hit": [
      "Việc cập nhật giúp giảm lỗi. Việc kiểm thử giúp tăng độ ổn định."
     ],
-    "miss": []
+    "miss": [
+     "Nhóm cần xác nhận việc tính phí trước thứ Hai."
+    ]
    },
    "source": "longhang2004/vietnamese-humanizer"
   },
@@ -398,7 +431,9 @@
     "hit": [
      "Sự thành công của việc áp dụng phương pháp mới."
     ],
-    "miss": []
+    "miss": [
+     "Sự cố của hệ thống thanh toán kéo dài 20 phút."
+    ]
    },
    "source": "longhang2004/vietnamese-humanizer"
   },
@@ -438,7 +473,10 @@
     "hit": [
      "Công cụ mở khóa tiềm năng của dữ liệu bán hàng."
     ],
-    "miss": []
+    "miss": [
+     "Ứng dụng giúp mở khóa cửa từ xa.",
+     "Nhóm tận dụng máy chủ cũ để chạy test."
+    ]
    },
    "source": "longhang2004/vietnamese-humanizer; Phạm Mỹ, Văn Nghệ"
   },
@@ -458,7 +496,9 @@
     "hit": [
      "Ứng dụng mang lại trải nghiệm liền mạch cho người dùng."
     ],
-    "miss": []
+    "miss": [
+     "Bản cập nhật bỏ bước đăng nhập lại, nên luồng thanh toán liền mạch hơn."
+    ]
    },
    "source": "longhang2004/vietnamese-humanizer; Phạm Mỹ, Văn Nghệ"
   },
@@ -468,17 +508,19 @@
    "maps_to": null,
    "kind": "regex",
    "scope": "any",
-   "strength": "strong",
-   "regex": "\\bkhi nói đến\\b|\\bđó (?:chính )?là lý do tại sao\\b",
+   "strength": "medium",
+   "regex": "(?:^[ \\t]*(?:[-*+][ \\t]+)?|(?<=[.!?…]\\s))khi nói đến\\b[^.!?\\n,]{1,60},",
    "ignore_case": true,
-   "multiline": false,
-   "why": "\"When it comes to\", \"that is why\". Use \"về\", \"vì vậy\".",
+   "multiline": true,
+   "why": "\"When it comes to\" as a sentence opener. Use \"về\".",
    "fix": "Use the native form: về, tức là, vì vậy; one của per chain.",
    "examples": {
     "hit": [
      "Khi nói đến hiệu năng, đây là thư viện nhanh."
     ],
-    "miss": []
+    "miss": [
+     "Anh ấy hay đỏ mặt khi nói đến chuyện cũ."
+    ]
    },
    "source": "longhang2004/vietnamese-humanizer; haunguyendev/humanizer-vi"
   },
@@ -498,7 +540,9 @@
     "hit": [
      "Điều này có nghĩa là bạn ít phải tối ưu."
     ],
-    "miss": []
+    "miss": [
+     "Điều này có ý nghĩa lớn với tôi."
+    ]
    },
    "source": "longhang2004/vietnamese-humanizer; haunguyendev/humanizer-vi"
   },
@@ -518,7 +562,9 @@
     "hit": [
      "Cán bộ và/hoặc công chức có thể đăng ký."
     ],
-    "miss": []
+    "miss": [
+     "Cán bộ hoặc công chức có thể đăng ký."
+    ]
    },
    "source": "longhang2004/vietnamese-humanizer; haunguyendev/humanizer-vi"
   },
@@ -538,7 +584,9 @@
     "hit": [
      "chất lượng phục vụ của người dân của đơn vị của tỉnh"
     ],
-    "miss": []
+    "miss": [
+     "Cuốn sách của mẹ tôi để trên bàn."
+    ]
    },
    "source": "longhang2004/vietnamese-humanizer; haunguyendev/humanizer-vi"
   },
@@ -590,6 +638,28 @@
    "source": "blind A/B review of humanizer-plus drafts, 2026-11-10"
   },
   {
+   "id": "VI-15g",
+   "name": "Phrase calques",
+   "maps_to": null,
+   "kind": "regex",
+   "scope": "any",
+   "strength": "strong",
+   "regex": "\\bđó (?:chính )?là lý do tại sao\\b",
+   "ignore_case": true,
+   "multiline": false,
+   "why": "\"That is why\". Use \"vì vậy\".",
+   "fix": "Use the native form: về, tức là, vì vậy; one của per chain.",
+   "examples": {
+    "hit": [
+     "Đó là lý do tại sao nhóm chọn Postgres."
+    ],
+    "miss": [
+     "Đó là lý do anh ấy nghỉ việc."
+    ]
+   },
+   "source": "longhang2004/vietnamese-humanizer; haunguyendev/humanizer-vi"
+  },
+  {
    "id": "VI-16a",
    "name": "Email and support calques",
    "maps_to": "[upstream §22 Chatbot residue]",
@@ -605,7 +675,9 @@
     "hit": [
      "Đừng ngần ngại liên hệ nếu có câu hỏi."
     ],
-    "miss": []
+    "miss": [
+     "Chúng tôi xin lỗi vì sự bất tiện này."
+    ]
    },
    "source": "trussary/vietnamese-language-skill"
   },
@@ -647,7 +719,10 @@
     "hit": [
      "Sau khi hợp nhất nhánh, nhóm sẽ triển khai lên môi trường sản xuất."
     ],
-    "miss": []
+    "miss": [
+     "Sau khi merge, nhóm sẽ deploy lên production.",
+     "Công ty cam kết hoàn tiền trong 7 ngày."
+    ]
    },
    "source": "see references/sources.md"
   },
@@ -667,7 +742,9 @@
     "hit": [
      "Tìm đúng tài liệu trước khi sửa mã."
     ],
-    "miss": []
+    "miss": [
+     "Nhập mã xác nhận gửi qua SMS."
+    ]
    },
    "source": "see references/sources.md"
   },
@@ -687,7 +764,10 @@
     "hit": [
      "Giải pháp toàn diện giúp doanh nghiệp bứt phá trong kỷ nguyên số."
     ],
-    "miss": []
+    "miss": [
+     "Mô hình tối ưu hóa hàm mục tiêu sau mỗi vòng lặp.",
+     "Hành trình từ Hà Nội vào Huế mất 12 tiếng."
+    ]
    },
    "source": "Finhay; Upcontent; Tân Phát Digital"
   },
@@ -767,7 +847,9 @@
     "hit": [
      "Tính năng này đóng vai trò quan trọng trong việc cải thiện hiệu suất."
     ],
-    "miss": []
+    "miss": [
+     "Gan đóng vai trò lọc độc tố trong máu."
+    ]
    },
    "source": "haunguyendev/humanizer-vi; longhang2004/vietnamese-humanizer"
   },
@@ -787,7 +869,9 @@
     "hit": [
      "Đơn vị tổ chức 12 lớp tập huấn, góp phần nâng cao năng lực cán bộ."
     ],
-    "miss": []
+    "miss": [
+     "Mỗi thành viên góp phần vốn bằng nhau."
+    ]
    },
    "source": "haunguyendev/humanizer-vi; longhang2004/vietnamese-humanizer"
   },
@@ -807,7 +891,9 @@
     "hit": [
      "Sự kiện đánh dấu một bước ngoặt trong ngành."
     ],
-    "miss": []
+    "miss": [
+     "Cột mốc số 5 nằm ở km 12."
+    ]
    },
    "source": "haunguyendev/humanizer-vi; longhang2004/vietnamese-humanizer"
   },
@@ -827,7 +913,9 @@
     "hit": [
      "Nhóm đã triển khai thực hiện kế hoạch nhanh chóng, kịp thời và hiệu quả."
     ],
-    "miss": []
+    "miss": [
+     "Đoàn kiểm tra, giám sát việc thu phí."
+    ]
    },
    "source": "haunguyendev/humanizer-vi"
   },
@@ -867,7 +955,9 @@
     "hit": [
      "Ứng dụng quản lý tài chính tốt nhất Việt Nam."
     ],
-    "miss": []
+    "miss": [
+     "Người đứng đầu cơ quan ký quyết định."
+    ]
    },
    "source": "Brands Vietnam; Luật Quảng cáo 16/2012/QH13"
   },
@@ -907,7 +997,10 @@
     "hit": [
      "Hơn nữa, cách này tiết kiệm chi phí."
     ],
-    "miss": []
+    "miss": [
+     "Tuy nhiên, cách này chậm hơn.",
+     "Cụ thể, phí tăng 5%."
+    ]
    },
    "source": "see references/sources.md"
   },
@@ -927,7 +1020,9 @@
     "hit": [
      "Hệ thống lưu log, đồng thời gửi cảnh báo, qua đó giúp nhóm phản hồi."
     ],
-    "miss": []
+    "miss": [
+     "Hai lệnh chạy đồng thời."
+    ]
    },
    "source": "see references/sources.md"
   },
@@ -947,7 +1042,9 @@
     "hit": [
      "Phương án mới giảm áp lực học tập, đồng thời đánh giá năng lực toàn diện hơn."
     ],
-    "miss": []
+    "miss": [
+     "Hai đội vào sân đồng thời."
+    ]
    },
    "source": "see references/sources.md"
   },
@@ -967,7 +1064,9 @@
     "hit": [
      "Nhóm đổi lịch và cách tính phí. Điều này áp dụng từ thứ Hai."
     ],
-    "miss": []
+    "miss": [
+     "Điều kiện này áp dụng từ thứ Hai."
+    ]
    },
    "source": "see references/sources.md"
   },
@@ -978,7 +1077,7 @@
    "kind": "regex",
    "scope": "prose",
    "strength": "medium",
-   "regex": "\\bdưới đây là (?:một số|những|các) (?:lợi ích|lý do|cách|mẹo|bước|điểm|yếu tố)\\b",
+   "regex": "\\bdưới đây là (?:một số|những|các) (?:lợi ích|lý do|cách|mẹo|điểm|yếu tố)\\b",
    "ignore_case": true,
    "multiline": false,
    "why": "Listicle lead-in.",
@@ -987,7 +1086,9 @@
     "hit": [
      "Dưới đây là một số lợi ích:"
     ],
-    "miss": []
+    "miss": [
+     "Dưới đây là các bước cài đặt:"
+    ]
    },
    "source": "see references/sources.md"
   },
@@ -1007,7 +1108,9 @@
     "hit": [
      "- **Hiệu suất:** Hiệu suất đã được cải thiện."
     ],
-    "miss": []
+    "miss": [
+     "- Bước 1: mở Cài đặt."
+    ]
    },
    "source": "see references/sources.md"
   },
@@ -1027,7 +1130,9 @@
     "hit": [
      "Anh check giúp em bản fix này ạ."
     ],
-    "miss": []
+    "miss": [
+     "Đã fix lỗi bộ lọc, cần kiểm tra lại."
+    ]
    },
    "source": "see references/sources.md"
   },
@@ -1038,8 +1143,8 @@
    "kind": "regex",
    "scope": "prose",
    "strength": "medium",
-   "regex": "(?<![\\w/.-])(?:ko|k0|dc|đc|ntn|mn|bh)(?![\\w/.-])",
-   "ignore_case": true,
+   "regex": "(?<![\\w/.-])(?:[Kk]o|k0|[Dd]c|[Đđ]c|ntn|mn|bh)(?![\\w/.-])",
+   "ignore_case": false,
    "multiline": false,
    "why": "Teencode in non-chat prose. Ignore inside code, paths and identifiers.",
    "fix": "Write the full word in neutral Vietnamese.",
@@ -1047,7 +1152,9 @@
     "hit": [
      "Ko biết cái này có dc ko."
     ],
-    "miss": []
+    "miss": [
+     "Dòng điện DC 12V được dùng cho bảng mạch."
+    ]
    },
    "source": "see references/sources.md"
   },
@@ -1058,16 +1165,21 @@
    "kind": "regex",
    "scope": "any",
    "strength": "strong",
-   "regex": "\\bchắc chắn rồi!|\\bcâu hỏi (?:rất|thật|quá) hay\\b|\\blà một (?:mô hình ngôn ngữ|trợ lý AI|AI)\\b|\\btôi chỉ là một AI\\b|\\bdưới đây là (?:phiên bản|bản) (?:đã|được) (?:viết lại|chỉnh sửa|sửa)\\b|\\bnếu bạn (?:cần|muốn)\\b[^.!?\\n]{0,40}\\b(?:mình|tôi) (?:có thể|sẵn sàng)\\b|\\btính đến thời điểm (?:cập nhật|kiến thức)\\b",
+   "regex": "\\bchắc chắn rồi!|\\bcâu hỏi (?:rất|thật|quá) hay\\b|\\b(?:tôi|mình) (?:chỉ )?là một (?:mô hình ngôn ngữ|trợ lý AI|AI)\\b|(?:^|(?<=[.!?]\\s))là một (?:mô hình ngôn ngữ|trợ lý AI|AI)\\b[^.!?\\n]{0,40},\\s*(?:tôi|mình)\\b|\\bdưới đây là (?:phiên bản|bản) (?:đã|được) (?:viết lại|chỉnh sửa|sửa)\\b|\\bnếu bạn (?:cần|muốn)\\b[^.!?\\n]{0,60}\\b(?:mình|tôi) (?:có thể|sẵn sàng)\\b[^.!?\\n]*[.!?]?\\s*\\Z|\\btính đến thời điểm (?:cập nhật|kiến thức)\\b",
    "ignore_case": true,
-   "multiline": false,
-   "why": "Chatbot residue (upstream §22, §23).",
+   "multiline": true,
+   "why": "Chatbot residue: an assistant speaking as itself, or a closing offer at the end of the text (upstream §22, §23).",
    "fix": "Remove the wrapper, keep the content.",
    "examples": {
     "hit": [
-     "Chắc chắn rồi! Dưới đây là phiên bản đã chỉnh sửa."
+     "Chắc chắn rồi! Dưới đây là phiên bản đã chỉnh sửa.",
+     "Là một mô hình ngôn ngữ, tôi không thể truy cập Internet.",
+     "Bản tóm tắt ở trên. Nếu bạn cần, mình có thể viết thêm phần kết luận."
     ],
-    "miss": []
+    "miss": [
+     "ChatGPT là một mô hình ngôn ngữ lớn do OpenAI phát triển.",
+     "Nếu bạn cần thêm số liệu, tôi có thể gửi bảng tính chi tiết vào thứ Hai. Báo cáo quý III đính kèm."
+    ]
    },
    "source": "see references/sources.md"
   },
@@ -1078,17 +1190,22 @@
    "kind": "regex",
    "scope": "any",
    "strength": "strong",
-   "regex": "(?<![\\d.,])\\d{1,3}(?:,\\d{3})+(?![\\d,])",
+   "regex": "(?<![\\d.,])(?:\\d{1,3}(?:,\\d{3}){2,}|[1-9]\\d{0,2},\\d{3}(?=\\s?(?:VND|VNĐ|vnđ|đồng|đ|₫)(?!\\w))|(?<=\\$)[1-9]\\d{0,2},\\d{3})(?![\\d,])",
    "ignore_case": false,
    "multiline": false,
-   "why": "Comma as thousands separator. Write 1.000.000.",
+   "why": "Comma as thousands separator (two or more groups, or a VND or $ amount). Write 1.000.000.",
    "fix": "Use a period for thousands and a comma for decimals.",
    "examples": {
     "hit": [
-     "Giá: 2,500,000 VND"
+     "Giá: 2,500,000 VND",
+     "Phí 1,500 đồng mỗi tin nhắn.",
+     "Gói Pro giá $1,500 mỗi năm."
     ],
     "miss": [
-     "Giá: 2.500.000 ₫"
+     "Giá: 2.500.000 ₫",
+     "Lãi suất giảm 0,125 điểm phần trăm so với tháng trước.",
+     "Lạm phát tăng 2,375% so với cùng kỳ.",
+     "Phí giao dịch 0,250%."
     ]
    },
    "source": "Microsoft Vietnamese Localization Style Guide"
@@ -1153,7 +1270,9 @@
     "hit": [
      "Sản phẩm này — vốn được thiết kế tỉ mỉ — sẽ thay đổi cách bạn làm việc."
     ],
-    "miss": []
+    "miss": [
+     "Ông Nguyễn Văn A - giám đốc sở - phát biểu."
+    ]
    },
    "source": "see references/sources.md"
   },
@@ -1173,7 +1292,9 @@
     "hit": [
      "Kết quả – như đã nói – khá tốt."
     ],
-    "miss": []
+    "miss": [
+     "Phát triển kinh tế - xã hội."
+    ]
    },
    "source": "see references/sources.md"
   },
@@ -1199,21 +1320,24 @@
   },
   {
    "id": "VI-54",
-   "name": "English-shaped long date",
+   "name": "English \"On [date], a ...\" frame",
    "maps_to": null,
    "kind": "regex",
    "scope": "prose",
    "strength": "weak",
-   "regex": "\\bvào ngày \\d{1,2} tháng \\d{1,2} năm \\d{4}\\b",
+   "regex": "(?:^|(?<=[.!?]\\s))vào ngày \\d{1,2} tháng \\d{1,2} năm \\d{4},\\s+(?:một|có một|đã có)\\b",
    "ignore_case": true,
-   "multiline": false,
-   "why": "English-shaped long date in prose. Official document headings are exempt.",
-   "fix": "Write the date as dd/mm/yyyy.",
+   "multiline": true,
+   "why": "English \"On [date], a [event] ...\" frame. The long date itself is native.",
+   "fix": "Open with the date alone (Ngày 15/10/2021, ...) or with the event.",
    "examples": {
     "hit": [
-     "Vào ngày 15 tháng 10 năm 2021, công ty ra mắt sản phẩm."
+     "Vào ngày 15 tháng 10 năm 2021, một vụ cháy lớn đã xảy ra tại nhà máy."
     ],
-    "miss": []
+    "miss": [
+     "Sự kiện diễn ra vào ngày 15 tháng 10 năm 2021 tại Huế.",
+     "Hà Nội, ngày 05 tháng 3 năm 2020"
+    ]
    },
    "source": "see references/sources.md"
   },
@@ -1233,7 +1357,9 @@
     "hit": [
      "Bạn có thể xem , sửa và xóa ."
     ],
-    "miss": []
+    "miss": [
+     "Tỷ số chung cuộc 2 : 1."
+    ]
    },
    "source": "Microsoft Vietnamese Localization Style Guide"
   },
@@ -1254,7 +1380,9 @@
     "hit": [
      "Việt"
     ],
-    "miss": []
+    "miss": [
+     "Việt"
+    ]
    },
    "source": "see references/sources.md"
   }

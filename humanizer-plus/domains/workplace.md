@@ -21,6 +21,7 @@ A colleague who must act: test, decide, unblock or pick up the work. They read t
 - After tagging a person, continue the message without repeating their name.
 - A saved protocol's format (such as a fixed first line) is followed exactly, with real newlines, never a literal `\n`.
 - Chat: one action per line; tag the person and say what to attach.
+- Lint Vietnamese Jira and Outline comments with `--doctype handoff`; it adds the inferred-honorific and particle check (VI-41).
 
 ## Medium tells
 
@@ -32,14 +33,12 @@ A colleague who must act: test, decide, unblock or pick up the work. They read t
 ## Vietnamese notes
 
 - Ticket and wiki comments: subject-free prose (*Đã fix lỗi ..., Cần QA kiểm tra lại ...*), no *nhé* or *nghe*, no emoji beyond a protocol marker. Never infer an honorific (VI-41); missing saved context establishes none.
-- For an unknown recipient write *người nhận bàn giao* (or *người nhận handover*); never *người kiểm tra*, and do not default to *người tiếp nhận*.
-- Describe QA work as *kết quả kiểm thử* or the concrete checks, screenshots and logs. Here *bằng chứng* reads as accusatory.
 - Chat: *nhé* and *nghe* are fine (*nghe* is southern, so match the thread). *Đã* or *rồi* carries the status: *Đã deploy lên staging rồi nhé.* English dev terms with Vietnamese grammar, no gloss (vi.md section 5).
 - Code review addresses the change: *Chỗ này nên tách thành hàm riêng.* *Có thể dùng map thay cho vòng lặp ở đây không?*
 
 ✗ Tôi đã hoàn thành việc sửa lỗi cho chức năng lọc đơn hàng. Anh vui lòng kiểm tra lại giúp em ạ.
 
-✓ Đã fix lỗi bộ lọc đơn hàng bị mất khi chuyển trang. QA kiểm tra lại theo các bước trong mục Test steps; ảnh "Bộ lọc sau khi chuyển trang" là kết quả kiểm thử trên staging.
+✓ Đã fix lỗi bộ lọc đơn hàng, cần kiểm tra lại.
 
 ## Review checklist
 

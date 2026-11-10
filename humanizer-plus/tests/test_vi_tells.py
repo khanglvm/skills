@@ -64,11 +64,38 @@ class CatalogueTest(unittest.TestCase):
                 self.assertFalse(regex.search(norm(miss)), f'{entry["id"]} hits its miss: {miss}')
 
     def test_ids_match_vi_md(self):
-        text = (SKILL / 'languages' / 'vi.md').read_text('utf-8')
-        defined = set(re.findall(r'\*\*(VI-\d\d)\b', text))
         data = json.loads(CATALOGUE.read_text('utf-8'))
         catalogue = {e['id'][:5] for e in data['patterns'] + data['manual']}
-        self.assertEqual(defined, catalogue)
+        entries = (SKILL / 'languages' / 'vi-catalogue.md').read_text('utf-8')
+        self.assertEqual(set(re.findall(r'\*\*(VI-\d\d)\b', entries)), catalogue)
+        core = (SKILL / 'languages' / 'vi.md').read_text('utf-8')
+        ranges = [(int(a), int(b)) for a, b in
+                  re.findall(r'^- \*\*[^*]+\(VI-(\d\d) to VI-(\d\d)\)', core, re.M)]
+        for pid in catalogue:
+            self.assertTrue(any(a <= int(pid[3:]) <= b for a, b in ranges),
+                            f'{pid} has no family line in vi.md section 3')
+
+    def test_every_strong_pattern_has_a_miss(self):
+        for entry, _ in self.cat['_compiled']:
+            if entry['strength'] == 'strong':
+                self.assertTrue(entry['examples']['miss'], f'{entry["id"]} is strong with no miss')
+
+    def test_strengths_named_in_prose_match_catalogue(self):
+        strengths = {}
+        for entry, _ in self.cat['_compiled']:
+            strengths.setdefault(entry['id'], set()).add(entry['strength'])
+            strengths.setdefault(entry['id'][:5], set()).add(entry['strength'])
+        files = [SKILL / 'SKILL.md'] + sorted(SKILL.glob('overrides/*.md')) + \
+            sorted(SKILL.glob('languages/*.md')) + sorted(SKILL.glob('domains/*.md'))
+        for path in files:
+            for sentence in re.split(r'(?<=[.;])\s+|\n', path.read_text('utf-8')):
+                named = set(re.findall(r'\b(strong|medium|weak)\b', sentence, re.I))
+                named = {word.lower() for word in named}
+                for pid in re.findall(r'\bVI-\d\d[a-z]?\b', sentence):
+                    if named and pid in strengths:
+                        self.assertTrue(named & strengths[pid],
+                                        f'{path.name}: "{sentence.strip()}" names {named} for '
+                                        f'{pid}, catalogue has {strengths[pid]}')
 
     def test_bad_catalogue_is_rejected(self):
         with tempfile.TemporaryDirectory() as tmp:
@@ -113,6 +140,24 @@ class LinterTest(unittest.TestCase):
                 f'https://example.com/{tell.replace(" ", "-")} và <span title="{tell}">x</span>.\n')
         self.assertEqual(self.lint(text)['findings'], [])
         self.assertTrue(self.lint(f'Hệ thống chạy {tell}.')['findings'])
+
+    def test_indented_fences_and_inline_runs_are_masked(self):
+        tell = 'Hy vọng bài viết này hữu ích.'
+        for text in (f'- Bước một:\n\n  ~~~\n  {tell}\n  ~~~\n',
+                     f'   ```md\n{tell}\n   ```\n',
+                     f'````\n```\n{tell}\n```\n````\n',
+                     f'Xem ``a ` {tell}`` trong mẫu.\n'):
+            self.assertEqual(self.lint(text)['findings'], [], text)
+        self.assertTrue(self.lint(f'```\ncode\n```\n\n{tell}\n')['findings'])
+        self.assertTrue(self.lint(f'```x``` rồi.\n\n{tell}\n')['findings'])
+
+    def test_long_quotes_stay_masked(self):
+        tell = 'Hy vọng bài viết này hữu ích.'
+        filler = 'x ' * 301
+        self.assertGreater(len(filler), 600)
+        self.assertEqual(self.lint(f'Anh nói: “{filler}{tell}”.\n')['findings'], [])
+        after = self.lint(f'Anh nói: “{filler}”. {tell}\n')['findings']
+        self.assertEqual([f['id'] for f in after], ['VI-03b'])
 
     def test_quotes_masked_unless_included(self):
         text = f'> Hy vọng bài viết này hữu ích với bạn.\n\nAnh nói: “Hy vọng bài viết này hữu ích.”\n'

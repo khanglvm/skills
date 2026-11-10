@@ -32,8 +32,12 @@ BOLD_LABEL_RE = re.compile(r'^(?:\d+\.\s+|[-*]\s+)?\*\*(.+?)\*\*')
 VERSION_RE = re.compile(r'^\s*version:\s*"?([^"\s]+)"?', re.M)
 WATCH_RE = re.compile(
     r'invent|make (anything|something) up|add(s|ing)? (a |an )?(specific )?(detail|fact)'
+    r'|concrete|include|fill(s|ing)? in'
     r'|publish|send|post|commit|push|curl|https?://|install|run |execute|token|password',
     re.I)
+# An override that rewrites upstream wording quotes it: `the sentence "..."` or `the clause "..."`.
+OVERRIDE_QUOTE_RE = re.compile(r'\bthe (?:sentence|clause) "([^"]+)"')
+OVERRIDE_GLOB = 'overrides/*.md'
 
 
 def sha256(data):
@@ -92,6 +96,36 @@ def anchor_failures(text, where, index):
     return failures
 
 
+def override_quote_failures(text, where, upstream_text):
+    """List quoted upstream wording in an override that upstream no longer contains."""
+    return [f'{where}: quoted upstream text not found: "{quote}"'
+            for quote in OVERRIDE_QUOTE_RE.findall(text) if quote not in upstream_text]
+
+
+def bare_sections(skill_dir):
+    """Return {N: [files]} for every bare §N the layers cite."""
+    cited = {}
+    for where, text in layer_texts(skill_dir):
+        for match in BARE_SECTION_RE.finditer(text):
+            files = cited.setdefault(int(match.group(1)), [])
+            if where not in files:
+                files.append(where)
+    return cited
+
+
+def section_title_failures(skill_dir, pinned, numbered):
+    """List bare §N citations whose upstream title differs from the pinned one."""
+    failures = []
+    for num, files in sorted(bare_sections(skill_dir).items()):
+        old, new = pinned.get(str(num)), numbered.get(num)
+        if old is None:
+            failures.append(f'{PIN}: sections has no §{num}, cited in {", ".join(files)}')
+        elif new is not None and old != new:
+            failures.append(f'§{num} was "{old}", upstream now has "{new}"; recheck '
+                            f'{", ".join(files)}, then update sections in {PIN}')
+    return failures
+
+
 def layer_texts(skill_dir):
     """Yield (relative path, text) for every file that cites upstream."""
     for pattern in LAYER_GLOBS:
@@ -128,7 +162,16 @@ def check(skill_dir=SKILL_DIR):
             failures.append(f'{rel}: sha256 differs from {PIN}')
     upstream = skill_dir / 'upstream/humanizer.md'
     if upstream.exists():
-        failures.extend(resolve_all(skill_dir, upstream.read_text('utf-8')))
+        text = upstream.read_text('utf-8')
+        failures.extend(resolve_all(skill_dir, text))
+        pinned = pin.get('sections')
+        if not isinstance(pinned, dict) or not pinned:
+            failures.append(f'{PIN}: sections missing')
+        else:
+            failures.extend(section_title_failures(skill_dir, pinned, upstream_index(text)[0]))
+        for path in sorted(skill_dir.glob(OVERRIDE_GLOB)):
+            failures.extend(override_quote_failures(
+                path.read_text('utf-8'), path.relative_to(skill_dir).as_posix(), text))
     return failures
 
 
@@ -230,6 +273,18 @@ def diff(skill_dir, source, ref, out=None):
     for line in resolve_all(skill_dir, new) or ['(none)']:
         print('  ' + line)
 
+    print('\nBare § citations whose title changed:')
+    for line in section_title_failures(skill_dir, pin.get('sections', {}), new_num) or ['(none)']:
+        print('  ' + line)
+
+    print('\nOverride quotes that would break:')
+    quotes = []
+    for path in sorted(skill_dir.glob(OVERRIDE_GLOB)):
+        quotes += override_quote_failures(path.read_text('utf-8'),
+                                          path.relative_to(skill_dir).as_posix(), new)
+    for line in quotes or ['(none)']:
+        print('  ' + line)
+
     print('\nChanged lines per section:')
     old_sec, new_sec = sections(old), sections(new)
     for head in list(dict.fromkeys(list(old_sec) + list(new_sec))):
@@ -267,7 +322,10 @@ def apply(skill_dir, source, ref):
     pin['commit'] = commit
     pin['ref'] = ref
     pin['version'] = version_of(blobs['upstream/humanizer.md'].decode('utf-8'))
-    (skill_dir / PIN).write_text(json.dumps(pin, indent=2) + '\n', 'utf-8')
+    # `sections` keeps the titles the layers were written against, so check()
+    # reports every bare §N whose title changed until a maintainer updates it.
+    pin.setdefault('sections', {})
+    (skill_dir / PIN).write_text(json.dumps(pin, indent=2, ensure_ascii=False) + '\n', 'utf-8')
     failures = check(skill_dir)
     for line in failures:
         print(line)
@@ -290,7 +348,8 @@ def main(argv=None):
         for line in failures:
             print(line)
         if not failures:
-            print('ok: pin hashes match and every upstream citation resolves')
+            print('ok: pin hashes match, every upstream citation and override quote resolves, '
+                  'and no cited section title changed')
         return 1 if failures else 0
     if args.command == 'diff':
         return diff(SKILL_DIR, Path(args.source), args.ref, args.out)

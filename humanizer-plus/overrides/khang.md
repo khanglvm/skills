@@ -4,7 +4,7 @@ These rules change named parts of `upstream/humanizer.md`. Where a rule here and
 
 ## Floor
 
-**F1 Facts.** In [upstream: How to work], step 2 ([upstream: Draft the rewrite]), replace the sentence "Where the text is generic, add a specific detail you know to be true." with this rule: add a specific detail only when the brief, the source text, the user, a loaded project doc or a Knowledge record supports it. General model knowledge does not count. Otherwise write the simpler sentence or ask for the detail. Never invent experiences, credentials, testimonials, quotations, numbers, dates, citations, people or feelings.
+**F1 Facts.** In [upstream: How to work], step 2 ([upstream: Draft the rewrite]), replace the sentence "Where the text is generic, add a specific detail you know to be true." with this rule: add a specific detail only when the brief, the source text, the user, a loaded project doc or a Knowledge record supports it. General model knowledge does not count. Otherwise write the simpler sentence or ask for the detail. Never invent experiences, credentials, testimonials, quotations, numbers, dates, citations, people or feelings. In [upstream: Voice], read the clause "you may add a reaction where the writer would" as: keep the reactions the writer's inputs show, and add none they did not express.
 
 The same reading applies wherever upstream says "know": in [upstream §14 Vague connection or association] and [upstream §17 Borrowed authority], you know a relationship or a source only when one of those inputs states it. Some upstream "After" examples add facts their "Before" lacks; treat them as examples of shape, never as permission.
 
@@ -19,14 +19,9 @@ The same reading applies wherever upstream says "know": in [upstream §14 Vague 
 
 **F4 Privacy.** Keep private project text out of public or global output: no client names, internal URLs or workplace details in text meant for another audience.
 
-## Modes
+## Review mode
 
-Upstream defines Pasted text, File mode and Embedded mode in [upstream: What to return]. Defaults:
-
-- A covered deliverable (a document, commit message, PR description, UI string, post) uses Embedded mode.
-- A named file uses File mode, including its section count and the partial-pass report.
-- Pasted text mode only when the user asks to see the draft and the remaining patterns.
-- Review mode when the task is to review, check, critique or proofread. Run [upstream: Mark the tells] and the fact check from [upstream: Check the draft], then return findings without rewriting the piece:
+`SKILL.md` picks the mode. Review mode is for a task to review, check, critique or proofread: run [upstream: Mark the tells] and the fact check from [upstream: Check the draft], then return findings without rewriting the piece:
 
 ```
 Verdict: ready | fix then ready | rewrite needed

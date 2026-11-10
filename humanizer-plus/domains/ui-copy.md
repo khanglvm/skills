@@ -35,7 +35,7 @@ Someone in the middle of a task who reads two words and moves on. Every string e
 - Buttons: *Thử lại, Quay lại, Lưu, Tìm hiểu thêm, Để sau*; *Chọn tất cả*, never *Chọn Tất Cả*.
 - Short words: *hủy* (not *hủy bỏ*), *nhập* (not *nhập vào*), *ẩn* (not *giấu*), *tìm hiểu* (not *học*).
 - Settled strings: *Đang tải…, Đang lưu…, Đã lưu, Cài đặt, Đăng nhập, Đăng xuất, Quên mật khẩu, Tải xuống, Tải lên, Sao chép liên kết, Cho phép, Có gì mới*.
-- Calques to replace: *Học thêm* → *Tìm hiểu thêm*; *Đăng nhập vào* → *Đăng nhập*; *Làm tươi trang* → *Tải lại trang*; *Nộp* → *Gửi*; *Định giá* → *Bảng giá* (VI-14 to VI-16).
+- Calques to replace: *Học thêm* → *Tìm hiểu thêm*; *Đăng nhập vào* → *Đăng nhập*; *Làm tươi trang* → *Tải lại trang*; *Định giá* → *Bảng giá* (VI-14 to VI-16).
 - Errors: *Không lưu được hình ảnh. Thử lại sau ít phút.* Use *Không ... được*, not *... thất bại* (VI-53). Generic fallback: *Đã có lỗi xảy ra. Vui lòng thử lại.*
 - No blame: *Thông tin chưa đúng, vui lòng kiểm tra lại*, not *Bạn đã nhập sai*.
 - Replace calqued fillers (*Có vẻ như ..., Có điều gì đó không ổn, Rất tiếc!*) with the fact (VI-15).

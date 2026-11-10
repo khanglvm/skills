@@ -27,7 +27,7 @@ A stranger who arrives from a search or a link and owes the writer nothing. They
 - Connected sentences: join related ideas with real connectives, keep a short sentence for a question or a real turn, and bridge every new fact to the one before (VI-32).
 - Read each sentence as a first-time reader: every pronoun and relation word has one target (VI-31).
 - Introduce a term once in everyday words, then use it bare. A vague noun becomes what it does for the task.
-- Ownership: a tool the writer created is introduced as their creation ("I built", "I made"; "maintain" only for upkeep). Show their part through what they do: the workflow they set, the changes they control and review, how they check an agent's work. Keep authorship qualifiers (much, most) accurate and never claim sole manual coding.
+- Ownership: a tool the writer created is introduced as their creation ("I built", "I made"; "maintain" only for upkeep). Show their part through what they do: the workflow they set, the changes they control and review, how they check an agent's work. Keep authorship qualifiers (much, most) accurate.
 - A hypothetical reads as hypothetical. No invented incidents, numbers, people, results or feelings.
 - Workplace implementation details stay private; describe client companies by sector, never by name.
 
@@ -35,7 +35,7 @@ A stranger who arrives from a search or a link and owes the writer nothing. They
 
 - Draft the Vietnamese edition with the write-from-meaning step (vi.md section 1), never by translating the English sentences.
 - Titles stay short and carry only the core contrast. Qualifiers such as *đã được xác minh* move to the sapo or first paragraph.
-- *mình* for the writer, *làm* rather than *xây dựng*, a feature described in plain words rather than a calqued command name. A tool the writer created: *Mình tạo ra X để ...*, never *Mình duy trì X*.
+- *mình* for a personal blog; otherwise use the vi.md register row. Describe a feature in plain words rather than a calqued command name. A tool the writer created: *Mình tạo ra X để ...*, never *Mình duy trì X*.
 - Column voice may use *tôi/mình*, particles (*cơ, chứ, nhỉ*) and a dry aside when the writer's sample does. Explanation stays neutral (VI-42).
 - News-style pieces: time marker first (*Chiều 1/11, ...*), a person introduced once with full name and (age, place), the spaced hyphen for apposition (vi.md section 3a).
 

@@ -12,7 +12,8 @@ SKILL = Path(__file__).resolve().parent.parent
 CAPS = {
     'SKILL.md': 8 * 1024,
     'overrides/khang.md': 4 * 1024,
-    'languages/vi.md': 24 * 1024,
+    'languages/vi.md': 10 * 1024,
+    'languages/vi-catalogue.md': 16 * 1024,
 }
 CARD_CAP = 5 * 1024
 CARD_HEADINGS = ['## Reader and purpose', '## Structure', '## Length and format',
@@ -73,12 +74,28 @@ class UpstreamTest(unittest.TestCase):
         good = '[upstream §1 Not X but Y] [upstream: How to work] [upstream: File mode] §26'
         self.assertEqual(self.sync.anchor_failures(good, 'x', index), [])
 
-    def test_override_replaces_how_to_work_sentence(self):
+    def test_override_quote_check(self):
+        upstream = (SKILL / 'upstream/humanizer.md').read_text('utf-8')
         text = (SKILL / 'overrides/khang.md').read_text('utf-8')
-        self.assertIn('[upstream: How to work]', text)
-        sentence = 'Where the text is generic, add a specific detail you know to be true.'
-        self.assertIn(sentence, (SKILL / 'upstream/humanizer.md').read_text('utf-8'))
-        self.assertIn(sentence, text)
+        self.assertGreaterEqual(len(self.sync.OVERRIDE_QUOTE_RE.findall(text)), 2)
+        bad = 'replace the sentence "No such sentence upstream." and the clause "nor this one"'
+        self.assertEqual(len(self.sync.override_quote_failures(bad, 'x', upstream)), 2)
+
+    def test_section_titles_pinned(self):
+        upstream = (SKILL / 'upstream/humanizer.md').read_text('utf-8')
+        numbered = self.sync.upstream_index(upstream)[0]
+        self.assertEqual(self.pin['sections'], {str(n): t for n, t in numbered.items()})
+        cited = self.sync.bare_sections(SKILL)
+        self.assertTrue(cited)
+        num = min(cited)
+        renamed = {**numbered, num: 'Renamed upstream'}
+        failures = self.sync.section_title_failures(SKILL, self.pin['sections'], renamed)
+        self.assertEqual(len(failures), 1)
+        self.assertIn(f'§{num} was', failures[0])
+
+    def test_router_loads_catalogue_conditionally(self):
+        self.assertIn('`languages/<lang>-catalogue.md`', self.router)
+        self.assertTrue((SKILL / 'languages' / 'vi-catalogue.md').exists())
 
     def test_single_skill_md(self):
         found = [p for p in SKILL.rglob('SKILL.md')]
