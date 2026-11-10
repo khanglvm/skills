@@ -1,0 +1,17 @@
+{
+  "repository": "https://github.com/blader/humanizer",
+  "ref": "v4.0.0",
+  "commit": "b48c832f0f809c1b5658edbb838c2521b72f2413",
+  "version": "4.0.0",
+  "license": "MIT",
+  "files": {
+    "upstream/humanizer.md": {
+      "source": "SKILL.md",
+      "sha256": "804a119e924ac30295b298213e0b71b3e38b2667b8ef4fb7b69e9246369b9045"
+    },
+    "upstream/LICENSE": {
+      "source": "LICENSE",
+      "sha256": "4ac4810254ab36d45419141aeb8e69bf50652cfafe5b2dab947d06d44e5cbf96"
+    }
+  }
+}

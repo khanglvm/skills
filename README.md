@@ -12,6 +12,7 @@ Dedicated repository for reusable coding skills.
 - `llm-router`: unified LLM gateway skill — teaches agents how to connect to a running llr instance, use model aliases, design multi-model agent architectures with fallback/load balancing/rate limiting across OpenAI/Anthropic/Gemini/OpenRouter providers.
 - `handoff`: generate a detailed continuation handoff for a fresh session or agent, either printed in chat or written to a file on request.
 - `visual-fidelity-ui`: implement and audit responsive UI against visual references with source-authority gates, native-resolution detail inspection, focal-geometry matching, complex connector mapping, and multi-viewport browser evidence.
+- `humanizer-plus`: write, edit, translate or review prose deliverables in English or Vietnamese so they read as written by a person. It vendors blader/humanizer unmodified and adds standing overrides, a Vietnamese layer with a tell linter, and per-medium cards (articles, docs, UI copy, landing pages, workplace messages, email, social posts, commits and PRs, release notes, reports). Khang's own devices receive it through Knowledge; do not also install it there with `npx skills`.
 
 ## Integration bundles (not `skills add` — restore with their installer)
 
@@ -28,6 +29,7 @@ npx skills add khanglvm/skills/jira-mcp
 npx skills add khanglvm/skills/llm-router
 npx skills add khanglvm/skills/handoff
 npx skills add khanglvm/skills/visual-fidelity-ui
+npx skills add khanglvm/skills/humanizer-plus
 
 # Or install from repo root with skill filter:
 npx skills add https://github.com/khanglvm/skills --skill jira-mcp

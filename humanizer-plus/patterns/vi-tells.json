@@ -1,0 +1,1265 @@
+{
+ "schema": "humanizer-plus/vi-tells@2",
+ "normalize": "NFC",
+ "scopes": {
+  "any": "every Vietnamese text",
+  "prose": "articles, docs, emails, posts; not UI strings, lists or tables",
+  "ui": "UI strings and i18n files",
+  "handoff": "Jira and Outline comments",
+  "marketing": "landing pages, ads, app-store listings"
+ },
+ "scoring": {
+  "weights": {
+   "strong": 3,
+   "medium": 2,
+   "weak": 1
+  },
+  "cluster_threshold": 3,
+  "calibration": "Checked 2026-11-10 against 14 pre-2022 human news texts (17,281 words, 536 paragraphs): 0 paragraphs reached the threshold with the default prose doctype. Recall on agent-written news-style text is low by design; the agent reading vi.md is the main detector."
+ },
+ "patterns": [
+  {
+   "id": "VI-01",
+   "name": "Macro-context opener",
+   "maps_to": null,
+   "kind": "regex",
+   "scope": "prose",
+   "strength": "medium",
+   "regex": "\\b(?:trong bối cảnh\\b[^.!?\\n]{0,60}\\b(?:không ngừng|ngày càng|mạnh mẽ)|trong (?:kỷ nguyên|thời đại) (?:số|công nghệ|số hóa|số hoá|4\\.0)|trong thế giới (?:ngày nay|hiện đại)|từ xưa đến nay)\\b",
+   "ignore_case": true,
+   "multiline": false,
+   "why": "Macro-context opener. Keep when the clause names a specific change.",
+   "fix": "Start with the concrete change or the claim.",
+   "examples": {
+    "hit": [
+     "Trong bối cảnh công nghệ phát triển không ngừng, doanh nghiệp cần đổi mới."
+    ],
+    "miss": [
+     "Trong bối cảnh đã có ca mắc mới, thí sinh được đo thân nhiệt."
+    ]
+   },
+   "source": "see references/sources.md"
+  },
+  {
+   "id": "VI-02a",
+   "name": "Announcing opener",
+   "maps_to": "[upstream §4 Staged run-up before the point]",
+   "kind": "regex",
+   "scope": "prose",
+   "strength": "strong",
+   "regex": "\\b(?:trong|ở) (?:bài viết|phần|video|bài) này,? (?:chúng ta|mình|tôi|chúng tôi|bạn|bài viết) (?:sẽ|cùng)\\b",
+   "ignore_case": true,
+   "multiline": false,
+   "why": "Announcing opener. Keep in a syllabus, proposal or spec scope section.",
+   "fix": "Cut the announcement and open with the content.",
+   "examples": {
+    "hit": [
+     "Trong bài viết này, chúng ta sẽ cùng tìm hiểu cách cache hoạt động."
+    ],
+    "miss": []
+   },
+   "source": "see references/sources.md"
+  },
+  {
+   "id": "VI-02b",
+   "name": "Announcing opener",
+   "maps_to": "[upstream §4 Staged run-up before the point]",
+   "kind": "regex",
+   "scope": "prose",
+   "strength": "strong",
+   "regex": "\\bhãy cùng (?:mình |chúng tôi )?(?:khám phá|tìm hiểu|điểm qua|đi sâu)\\b",
+   "ignore_case": true,
+   "multiline": false,
+   "why": "Staged run-up (upstream §4).",
+   "fix": "Cut the announcement and open with the content.",
+   "examples": {
+    "hit": [
+     "Hãy cùng khám phá những tính năng mới nhất."
+    ],
+    "miss": []
+   },
+   "source": "see references/sources.md"
+  },
+  {
+   "id": "VI-02c",
+   "name": "Announcing opener",
+   "maps_to": "[upstream §4 Staged run-up before the point]",
+   "kind": "regex",
+   "scope": "prose",
+   "strength": "medium",
+   "regex": "\\bbạn (?:đã|có) bao giờ (?:tự hỏi|thắc mắc|nghĩ)\\b|\\bbạn có biết rằng\\b",
+   "ignore_case": true,
+   "multiline": false,
+   "why": "Rhetorical-question opener.",
+   "fix": "Cut the announcement and open with the content.",
+   "examples": {
+    "hit": [
+     "Bạn đã bao giờ tự hỏi vì sao trang tải chậm?"
+    ],
+    "miss": []
+   },
+   "source": "see references/sources.md"
+  },
+  {
+   "id": "VI-02d",
+   "name": "Announcing opener",
+   "maps_to": "[upstream §4 Staged run-up before the point]",
+   "kind": "regex",
+   "scope": "prose",
+   "strength": "weak",
+   "regex": "\\bDưới đây là (?:một số|những|các)\\b",
+   "ignore_case": false,
+   "multiline": false,
+   "why": "Weak; common and legitimate in docs before a real list.",
+   "fix": "Cut the announcement and open with the content.",
+   "examples": {
+    "hit": [
+     "Dưới đây là một số lợi ích bạn nên biết."
+    ],
+    "miss": []
+   },
+   "source": "see references/sources.md"
+  },
+  {
+   "id": "VI-03a",
+   "name": "Template closer and moral",
+   "maps_to": "[upstream §2 One-line closers and dramatic fragments]",
+   "kind": "regex",
+   "scope": "prose",
+   "strength": "medium",
+   "regex": "(?:^|(?<=[.!?…]\\s))(?:Tóm lại|Nhìn chung|Tổng kết lại|Kết luận lại|Có thể thấy(?: rằng| rõ)?|Có thể nói(?: rằng)?)\\b",
+   "ignore_case": false,
+   "multiline": true,
+   "why": "Template closer at sentence start. Case-sensitive to anchor on sentence start.",
+   "fix": "End on the last fact, a quote or the real next step.",
+   "examples": {
+    "hit": [
+     "Tóm lại, đây là giải pháp đáng cân nhắc."
+    ],
+    "miss": []
+   },
+   "source": "see references/sources.md"
+  },
+  {
+   "id": "VI-03b",
+   "name": "Template closer and moral",
+   "maps_to": "[upstream §2 One-line closers and dramatic fragments]",
+   "kind": "regex",
+   "scope": "any",
+   "strength": "strong",
+   "regex": "\\bhy vọng (?:rằng )?(?:bài viết|những thông tin|thông tin|nội dung|chia sẻ|điều này)\\b[^.!?\\n]{0,40}\\b(?:hữu ích|giúp ích|giúp bạn)",
+   "ignore_case": true,
+   "multiline": false,
+   "why": "Send-off closer.",
+   "fix": "End on the last fact, a quote or the real next step.",
+   "examples": {
+    "hit": [
+     "Hy vọng bài viết này hữu ích với bạn."
+    ],
+    "miss": []
+   },
+   "source": "see references/sources.md"
+  },
+  {
+   "id": "VI-03c",
+   "name": "Template closer and moral",
+   "maps_to": "[upstream §2 One-line closers and dramatic fragments]",
+   "kind": "regex",
+   "scope": "prose",
+   "strength": "medium",
+   "regex": "\\bmỗi (?:chúng ta|người chúng ta) (?:cần|hãy|phải|nên)\\b|\\b(?:hứa hẹn|mở ra) (?:một )?(?:tương lai tươi sáng|chương mới|kỷ nguyên mới)\\b",
+   "ignore_case": true,
+   "multiline": false,
+   "why": "Moral or bright-future closer (upstream §13).",
+   "fix": "End on the last fact, a quote or the real next step.",
+   "examples": {
+    "hit": [
+     "Vì vậy, mỗi chúng ta cần trân trọng lòng biết ơn."
+    ],
+    "miss": []
+   },
+   "source": "see references/sources.md"
+  },
+  {
+   "id": "VI-03d",
+   "name": "Template closer and moral",
+   "maps_to": "[upstream §2 One-line closers and dramatic fragments]",
+   "kind": "regex",
+   "scope": "prose",
+   "strength": "weak",
+   "regex": "\\btrong (?:tương lai(?: gần)?|thời gian tới)[.!](?=\\s*$)",
+   "ignore_case": true,
+   "multiline": true,
+   "why": "Weak; a paragraph that ends on a vague future instead of the last fact.",
+   "fix": "End on the last fact, a quote or the real next step.",
+   "examples": {
+    "hit": [
+     "Trí tuệ nhân tạo sẽ tiếp tục thay đổi phương thức này trong tương lai gần."
+    ],
+    "miss": []
+   },
+   "source": "see references/sources.md"
+  },
+  {
+   "id": "VI-04a",
+   "name": "Contrast frame",
+   "maps_to": "[upstream §1 Not X but Y]",
+   "kind": "regex",
+   "scope": "any",
+   "strength": "strong",
+   "regex": "\\bkhông phải (?:là )?[^.!?\\n]{1,80}[.!?]\\s+mà (?:là|chính là)\\b",
+   "ignore_case": true,
+   "multiline": false,
+   "why": "Contrast split across two sentences (\"Không phải X. Mà là Y.\").",
+   "fix": "State the positive half directly; join the two facts with và.",
+   "examples": {
+    "hit": [
+     "Giỏi AI không phải là thuộc vài câu lệnh. Mà là biết đưa đúng bối cảnh."
+    ],
+    "miss": []
+   },
+   "source": "longhang2004/vietnamese-humanizer; Nghiện AI group post"
+  },
+  {
+   "id": "VI-04b",
+   "name": "Contrast frame",
+   "maps_to": "[upstream §1 Not X but Y]",
+   "kind": "regex",
+   "scope": "prose",
+   "strength": "weak",
+   "regex": "\\bkhông (?:chỉ|những|đơn thuần)(?: là)?\\b[^.!?\\n]{1,100}\\bmà còn\\b",
+   "ignore_case": true,
+   "multiline": false,
+   "why": "Weak alone; flag when repeated in a paragraph. One per text is normal.",
+   "fix": "State the positive half directly; join the two facts with và.",
+   "examples": {
+    "hit": [
+     "Sản phẩm không chỉ bền mà còn đẹp."
+    ],
+    "miss": []
+   },
+   "source": "longhang2004/vietnamese-humanizer; Nghiện AI group post"
+  },
+  {
+   "id": "VI-04c",
+   "name": "Contrast frame",
+   "maps_to": "[upstream §1 Not X but Y]",
+   "kind": "regex",
+   "scope": "prose",
+   "strength": "weak",
+   "regex": "\\bkhông phải (?:là )?[^.!?\\n,]{1,60},? mà là\\b",
+   "ignore_case": true,
+   "multiline": false,
+   "why": "Weak alone; human opinion columns use it once.",
+   "fix": "State the positive half directly; join the two facts with và.",
+   "examples": {
+    "hit": [
+     "Đây không phải là chuyện tiền bạc mà là chuyện đam mê."
+    ],
+    "miss": []
+   },
+   "source": "longhang2004/vietnamese-humanizer; Nghiện AI group post"
+  },
+  {
+   "id": "VI-05",
+   "name": "Self-announced importance",
+   "maps_to": "[upstream §3 Sayings that sound deep]",
+   "kind": "regex",
+   "scope": "prose",
+   "strength": "medium",
+   "regex": "\\b(?:điều|cái) (?:quan trọng|thú vị|đáng chú ý|đáng nói|hay)(?: nhất)?(?: ở đây)? (?:là|chính là)\\b|\\bcần lưu ý (?:rằng|là)\\b|\\b(?:về bản chất|suy cho cùng),",
+   "ignore_case": true,
+   "multiline": false,
+   "why": "Self-announced importance (upstream §3, §9).",
+   "fix": "Delete the frame and state the fact.",
+   "examples": {
+    "hit": [
+     "Điều thú vị là công cụ này chạy hoàn toàn offline."
+    ],
+    "miss": []
+   },
+   "source": "see references/sources.md"
+  },
+  {
+   "id": "VI-06a",
+   "name": "Social-post arc and slogan fragments",
+   "maps_to": "[upstream §2 One-line closers and dramatic fragments]",
+   "kind": "regex",
+   "scope": "prose",
+   "strength": "medium",
+   "regex": "(?:^|(?<=[.!?…]\\s))(?:Nói thẳng|Nói thật|Thật lòng mà nói|Sự thật là)[.:,]",
+   "ignore_case": false,
+   "multiline": true,
+   "why": "Staged candor opener.",
+   "fix": "Join the fragments into one sentence with a subject; keep a real anecdote with its date or number.",
+   "examples": {
+    "hit": [
+     "Nói thẳng. Một chuẩn giao tiếp."
+    ],
+    "miss": []
+   },
+   "source": "Nghiện AI group post"
+  },
+  {
+   "id": "VI-06b",
+   "name": "Social-post arc and slogan fragments",
+   "maps_to": "[upstream §2 One-line closers and dramatic fragments]",
+   "kind": "regex",
+   "scope": "prose",
+   "strength": "medium",
+   "regex": "\\bsau một thời gian (?:dài )?(?:làm|dùng|sử dụng|trải nghiệm)\\b[^.!?\\n]{0,50},\\s*(?:tôi|mình) (?:mới )?nhận ra\\b",
+   "ignore_case": true,
+   "multiline": false,
+   "why": "Social-post confession arc.",
+   "fix": "Join the fragments into one sentence with a subject; keep a real anecdote with its date or number.",
+   "examples": {
+    "hit": [
+     "Sau một thời gian dùng AI để code, tôi nhận ra một điều."
+    ],
+    "miss": []
+   },
+   "source": "Nghiện AI group post"
+  },
+  {
+   "id": "VI-10",
+   "name": "Passive calque được ... bởi",
+   "maps_to": "[upstream §11 Passive voice and missing subjects]",
+   "kind": "regex",
+   "scope": "any",
+   "strength": "medium",
+   "regex": "\\bđược\\s+(?:[^\\s.,;:!?]+\\s+){1,4}?bởi\\b",
+   "ignore_case": true,
+   "multiline": false,
+   "why": "Passive calque. Native order is \"do X làm\" or \"được X làm\".",
+   "fix": "Put the agent after được, or use do X + verb.",
+   "examples": {
+    "hit": [
+     "Sản phẩm được phát triển bởi đội kỹ sư."
+    ],
+    "miss": [
+     "Sản phẩm do đội kỹ sư phát triển và được hàng nghìn khách hàng tin dùng."
+    ]
+   },
+   "source": "cthpAiden/humanizer-vi; longhang2004/vietnamese-humanizer"
+  },
+  {
+   "id": "VI-11a",
+   "name": "Nominalisation and light verbs",
+   "maps_to": "[upstream §18 Avoiding is, are, and has]",
+   "kind": "regex",
+   "scope": "any",
+   "strength": "medium",
+   "regex": "\\b(?:tiến hành (?:việc|thực hiện)|thực hiện việc|thông qua việc|(?:đưa ra|cung cấp|mang lại) sự (?:hỗ trợ|giúp đỡ)|việc thực hiện công tác)\\b",
+   "ignore_case": true,
+   "multiline": false,
+   "why": "Light verb plus nominalisation. Keep defined legal procedure names.",
+   "fix": "Use the verb itself: drop tiến hành, thực hiện việc, sự/việc before a verb.",
+   "examples": {
+    "hit": [
+     "Nhóm tiến hành việc gửi bản nháp để thực hiện việc lấy ý kiến."
+    ],
+    "miss": []
+   },
+   "source": "longhang2004/vietnamese-humanizer"
+  },
+  {
+   "id": "VI-11b",
+   "name": "Nominalisation and light verbs",
+   "maps_to": "[upstream §18 Avoiding is, are, and has]",
+   "kind": "regex",
+   "scope": "prose",
+   "strength": "weak",
+   "regex": "(?:^|(?<=[.!?…]\\s))Việc\\b",
+   "ignore_case": false,
+   "multiline": true,
+   "why": "Weak; flag only when two or more sentences in one paragraph open with \"Việc\".",
+   "fix": "Use the verb itself: drop tiến hành, thực hiện việc, sự/việc before a verb.",
+   "examples": {
+    "hit": [
+     "Việc cập nhật giúp giảm lỗi. Việc kiểm thử giúp tăng độ ổn định."
+    ],
+    "miss": []
+   },
+   "source": "longhang2004/vietnamese-humanizer"
+  },
+  {
+   "id": "VI-11c",
+   "name": "Nominalisation and light verbs",
+   "maps_to": "[upstream §18 Avoiding is, are, and has]",
+   "kind": "regex",
+   "scope": "prose",
+   "strength": "weak",
+   "regex": "\\bsự (?:phát triển|đa dạng|đổi mới|cải thiện|thành công|chuyển biến|tăng trưởng|hài lòng|tiện lợi)\\s+(?:của|trong|cho)\\b",
+   "ignore_case": true,
+   "multiline": false,
+   "why": "Weak; \"sự + V + của\" calque of \"the X of\". Real nouns (sự cố, sự kiện) are excluded.",
+   "fix": "Use the verb itself: drop tiến hành, thực hiện việc, sự/việc before a verb.",
+   "examples": {
+    "hit": [
+     "Sự thành công của việc áp dụng phương pháp mới."
+    ],
+    "miss": []
+   },
+   "source": "longhang2004/vietnamese-humanizer"
+  },
+  {
+   "id": "VI-13",
+   "name": "một cách + adjective",
+   "maps_to": null,
+   "kind": "regex",
+   "scope": "any",
+   "strength": "weak",
+   "regex": "\\bmột cách (?:hiệu quả|nhanh chóng|dễ dàng|toàn diện|chính xác|tối ưu|mạnh mẽ|linh hoạt|rõ ràng|tự nhiên|khéo léo|bền vững|liền mạch|đáng kể|chủ động|thông minh|tối đa|chuyên nghiệp|tuyệt vời)\\b",
+   "ignore_case": true,
+   "multiline": false,
+   "why": "Weak alone; dense in AI copy, absent from the human corpus.",
+   "fix": "Drop một cách and keep the adjective.",
+   "examples": {
+    "hit": [
+     "Bạn có thể hoàn thành công việc một cách hiệu quả."
+    ],
+    "miss": []
+   },
+   "source": "see references/sources.md"
+  },
+  {
+   "id": "VI-14a",
+   "name": "Literal English metaphor",
+   "maps_to": "[upstream §12 Overused AI words]",
+   "kind": "regex",
+   "scope": "any",
+   "strength": "strong",
+   "regex": "\\b(?:mở khóa|mở khoá) (?:tiềm năng|sức mạnh|giá trị)\\b|\\bđiều hướng (?:sự|những) phức tạp\\b|\\btác động có ý nghĩa\\b|\\b(?:ở cấp độ cốt lõi|tại cốt lõi của)\\b|\\btận dụng sức mạnh của\\b|\\bthay đổi cuộc chơi\\b|\\b(?:người hùng (?:thầm lặng|không áo choàng)|chiến binh thầm lặng)\\b",
+   "ignore_case": true,
+   "multiline": false,
+   "why": "Literal English metaphor. Keep an approved slogan.",
+   "fix": "Name the plain action (giúp, dùng, xử lý).",
+   "examples": {
+    "hit": [
+     "Công cụ mở khóa tiềm năng của dữ liệu bán hàng."
+    ],
+    "miss": []
+   },
+   "source": "longhang2004/vietnamese-humanizer; Phạm Mỹ, Văn Nghệ"
+  },
+  {
+   "id": "VI-14b",
+   "name": "Literal English metaphor",
+   "maps_to": "[upstream §12 Overused AI words]",
+   "kind": "regex",
+   "scope": "any",
+   "strength": "medium",
+   "regex": "\\b(?:mang lại |tạo ra )?trải nghiệm liền mạch\\b|\\bđi sâu vào\\b",
+   "ignore_case": true,
+   "multiline": false,
+   "why": "Medium; legitimate when the removed break or the depth is named.",
+   "fix": "Name the plain action (giúp, dùng, xử lý).",
+   "examples": {
+    "hit": [
+     "Ứng dụng mang lại trải nghiệm liền mạch cho người dùng."
+    ],
+    "miss": []
+   },
+   "source": "longhang2004/vietnamese-humanizer; Phạm Mỹ, Văn Nghệ"
+  },
+  {
+   "id": "VI-15a",
+   "name": "Phrase calques",
+   "maps_to": null,
+   "kind": "regex",
+   "scope": "any",
+   "strength": "strong",
+   "regex": "\\bkhi nói đến\\b|\\bđó (?:chính )?là lý do tại sao\\b",
+   "ignore_case": true,
+   "multiline": false,
+   "why": "\"When it comes to\", \"that is why\". Use \"về\", \"vì vậy\".",
+   "fix": "Use the native form: về, tức là, vì vậy; one của per chain.",
+   "examples": {
+    "hit": [
+     "Khi nói đến hiệu năng, đây là thư viện nhanh."
+    ],
+    "miss": []
+   },
+   "source": "longhang2004/vietnamese-humanizer; haunguyendev/humanizer-vi"
+  },
+  {
+   "id": "VI-15b",
+   "name": "Phrase calques",
+   "maps_to": null,
+   "kind": "regex",
+   "scope": "any",
+   "strength": "medium",
+   "regex": "\\bđiều này có nghĩa là\\b",
+   "ignore_case": true,
+   "multiline": false,
+   "why": "\"This means\". Use \"tức là\" or \"nghĩa là\".",
+   "fix": "Use the native form: về, tức là, vì vậy; one của per chain.",
+   "examples": {
+    "hit": [
+     "Điều này có nghĩa là bạn ít phải tối ưu."
+    ],
+    "miss": []
+   },
+   "source": "longhang2004/vietnamese-humanizer; haunguyendev/humanizer-vi"
+  },
+  {
+   "id": "VI-15c",
+   "name": "Phrase calques",
+   "maps_to": null,
+   "kind": "regex",
+   "scope": "prose",
+   "strength": "weak",
+   "regex": "\\bvà/hoặc\\b",
+   "ignore_case": true,
+   "multiline": false,
+   "why": "Weak; established in contracts, a calque elsewhere.",
+   "fix": "Use the native form: về, tức là, vì vậy; one của per chain.",
+   "examples": {
+    "hit": [
+     "Cán bộ và/hoặc công chức có thể đăng ký."
+    ],
+    "miss": []
+   },
+   "source": "longhang2004/vietnamese-humanizer; haunguyendev/humanizer-vi"
+  },
+  {
+   "id": "VI-15d",
+   "name": "Phrase calques",
+   "maps_to": null,
+   "kind": "regex",
+   "scope": "prose",
+   "strength": "weak",
+   "regex": "\\bcủa\\s+(?:[^\\s.,;:!?]+\\s+){1,3}?của\\s+(?:[^\\s.,;:!?]+\\s+){1,3}?của\\b",
+   "ignore_case": true,
+   "multiline": false,
+   "why": "Weak; chained \"của\" (the X of the Y of the Z).",
+   "fix": "Use the native form: về, tức là, vì vậy; one của per chain.",
+   "examples": {
+    "hit": [
+     "chất lượng phục vụ của người dân của đơn vị của tỉnh"
+    ],
+    "miss": []
+   },
+   "source": "longhang2004/vietnamese-humanizer; haunguyendev/humanizer-vi"
+  },
+  {
+   "id": "VI-15e",
+   "name": "Phrase calques",
+   "maps_to": null,
+   "kind": "regex",
+   "scope": "ui",
+   "strength": "medium",
+   "regex": "\\bcó vẻ như (?:bạn|có|đã|trang)\\b|\\bcó (?:điều|cái) gì đó (?:không ổn|đã sai|đi sai)\\b",
+   "ignore_case": true,
+   "multiline": false,
+   "why": "Calqued UI fillers (\"It looks like\", \"Something went wrong\").",
+   "fix": "Use the native form: về, tức là, vì vậy; one của per chain.",
+   "examples": {
+    "hit": [
+     "Có vẻ như bạn đang ngoại tuyến."
+    ],
+    "miss": []
+   },
+   "source": "longhang2004/vietnamese-humanizer; haunguyendev/humanizer-vi"
+  },
+  {
+   "id": "VI-16a",
+   "name": "Email and support calques",
+   "maps_to": "[upstream §22 Chatbot residue]",
+   "kind": "regex",
+   "scope": "any",
+   "strength": "strong",
+   "regex": "\\bemail này tìm thấy\\b|\\bđừng ngần ngại (?:liên hệ|liên lạc|hỏi|chia sẻ)\\b|\\bcảm ơn (?:bạn|anh/chị|quý khách) đã dành thời gian\\b",
+   "ignore_case": true,
+   "multiline": false,
+   "why": "Email and support calques.",
+   "fix": "Use a native support or email formula, or cut the line.",
+   "examples": {
+    "hit": [
+     "Đừng ngần ngại liên hệ nếu có câu hỏi."
+    ],
+    "miss": []
+   },
+   "source": "trussary/vietnamese-language-skill"
+  },
+  {
+   "id": "VI-16b",
+   "name": "Email and support calques",
+   "maps_to": "[upstream §22 Chatbot residue]",
+   "kind": "regex",
+   "scope": "ui",
+   "strength": "strong",
+   "regex": "\\bHọc thêm(?=\\s*(?:$|về\\b|→|›|>))|\\bĐọc nhiều hơn\\b|\\bTìm hiểu nhiều hơn\\b|\\bLấy báo giá\\b|\\bLiên lạc (?:với )?chúng tôi\\b|\\bĐăng nhập vào(?=\\s*$)",
+   "ignore_case": false,
+   "multiline": true,
+   "why": "CTA calques. Case-sensitive; \"học thêm\" as tutoring is ordinary.",
+   "fix": "Use a native support or email formula, or cut the line.",
+   "examples": {
+    "hit": [
+     "Học thêm về dự án"
+    ],
+    "miss": [
+     "Con đi học thêm tiếng Anh vào tối thứ Năm."
+    ]
+   },
+   "source": "trussary/vietnamese-language-skill"
+  },
+  {
+   "id": "VI-17",
+   "name": "Developer-term calques",
+   "maps_to": null,
+   "kind": "regex",
+   "scope": "any",
+   "strength": "strong",
+   "regex": "\\bcam kết (?:các |những )?thay đổi\\b|\\btriển khai (?:đến|lên) (?:môi trường )?sản xuất\\b|\\bhợp nhất (?:nhánh|mã|code)\\b|\\byêu cầu kéo\\b|\\bcon bọ\\b",
+   "ignore_case": true,
+   "multiline": false,
+   "why": "Developer-term calques; keep commit, deploy, production, merge, pull request.",
+   "fix": "Keep the English dev term: commit, deploy, merge, pull request, code.",
+   "examples": {
+    "hit": [
+     "Sau khi hợp nhất nhánh, nhóm sẽ triển khai lên môi trường sản xuất."
+    ],
+    "miss": []
+   },
+   "source": "see references/sources.md"
+  },
+  {
+   "id": "VI-17b",
+   "name": "Developer-term calques",
+   "maps_to": null,
+   "kind": "regex",
+   "scope": "prose",
+   "strength": "medium",
+   "regex": "\\bsửa mã\\b|\\bviết mã\\b",
+   "ignore_case": true,
+   "multiline": false,
+   "why": "In developer copy say \"code\". \"mã nguồn\" in formal company narrative is fine.",
+   "fix": "Keep the English dev term: commit, deploy, merge, pull request, code.",
+   "examples": {
+    "hit": [
+     "Tìm đúng tài liệu trước khi sửa mã."
+    ],
+    "miss": []
+   },
+   "source": "see references/sources.md"
+  },
+  {
+   "id": "VI-20a",
+   "name": "Hollow evaluative words",
+   "maps_to": "[upstream §12 Overused AI words]",
+   "kind": "regex",
+   "scope": "prose",
+   "strength": "weak",
+   "regex": "\\b(?:giải pháp toàn diện|vượt trội|đột phá|nâng tầm|bứt phá|kỷ nguyên số|bức tranh toàn cảnh|chìa khóa (?:thành công|vàng)|giá trị cốt lõi|tối ưu hóa (?:hiệu quả|trải nghiệm|quy trình|vận hành))\\b",
+   "ignore_case": true,
+   "multiline": false,
+   "why": "Hollow evaluative words; count per paragraph.",
+   "fix": "Replace with the fact the brief gives, or cut; ask when there is none.",
+   "examples": {
+    "hit": [
+     "Giải pháp toàn diện giúp doanh nghiệp bứt phá trong kỷ nguyên số."
+    ],
+    "miss": []
+   },
+   "source": "Finhay; Upcontent; Tân Phát Digital"
+  },
+  {
+   "id": "VI-20b",
+   "name": "Hollow evaluative words",
+   "maps_to": "[upstream §12 Overused AI words]",
+   "kind": "regex",
+   "scope": "prose",
+   "strength": "weak",
+   "regex": "\\b(?:vô cùng|hết sức|cực kỳ) (?:quan trọng|cần thiết|sâu sắc|to lớn|ý nghĩa|hữu ích)\\b",
+   "ignore_case": true,
+   "multiline": false,
+   "why": "Intensifier on an evaluative word.",
+   "fix": "Replace with the fact the brief gives, or cut; ask when there is none.",
+   "examples": {
+    "hit": [
+     "Đây là một bước vô cùng quan trọng."
+    ],
+    "miss": []
+   },
+   "source": "Finhay; Upcontent; Tân Phát Digital"
+  },
+  {
+   "id": "VI-20c",
+   "name": "Hollow evaluative words",
+   "maps_to": "[upstream §12 Overused AI words]",
+   "kind": "regex",
+   "scope": "prose",
+   "strength": "medium",
+   "regex": "\\b(?:tăng cường|đẩy mạnh|nâng cao) (?:mạnh mẽ|toàn diện|hơn nữa|một cách)\\b",
+   "ignore_case": true,
+   "multiline": false,
+   "why": "Stacked official-style intensifiers.",
+   "fix": "Replace with the fact the brief gives, or cut; ask when there is none.",
+   "examples": {
+    "hit": [
+     "Đơn vị đã tăng cường mạnh mẽ chất lượng phục vụ."
+    ],
+    "miss": []
+   },
+   "source": "Finhay; Upcontent; Tân Phát Digital"
+  },
+  {
+   "id": "VI-20d",
+   "name": "Hollow evaluative words",
+   "maps_to": "[upstream §12 Overused AI words]",
+   "kind": "regex",
+   "scope": "prose",
+   "strength": "weak",
+   "regex": "\\b(?:đa dạng và phong phú|phong phú và đa dạng|không thể phủ nhận|nổi bật với|gây ấn tượng (?:với|bởi|mạnh)|bày tỏ sự (?:ủng hộ|đồng tình|quan tâm))\\b",
+   "ignore_case": true,
+   "multiline": false,
+   "why": "Weak; stock praise and nominalised reactions, several times denser in an AI news corpus than in human news.",
+   "fix": "Replace with the fact the brief gives, or cut; ask when there is none.",
+   "examples": {
+    "hit": [
+     "Thái Lan có hệ thống vườn quốc gia đa dạng và phong phú."
+    ],
+    "miss": []
+   },
+   "source": "Finhay; Upcontent; Tân Phát Digital"
+  },
+  {
+   "id": "VI-21a",
+   "name": "Significance riders",
+   "maps_to": "[upstream §15 Shallow -ing phrases]",
+   "kind": "regex",
+   "scope": "prose",
+   "strength": "medium",
+   "regex": "\\bđóng vai trò (?:vô cùng |rất |hết sức )?(?:quan trọng|then chốt|chủ chốt|cốt lõi|trung tâm)\\b",
+   "ignore_case": true,
+   "multiline": false,
+   "why": "Significance phrase. Keep when the text analyses a real role.",
+   "fix": "Keep the fact and drop the significance clause.",
+   "examples": {
+    "hit": [
+     "Tính năng này đóng vai trò quan trọng trong việc cải thiện hiệu suất."
+    ],
+    "miss": []
+   },
+   "source": "haunguyendev/humanizer-vi; longhang2004/vietnamese-humanizer"
+  },
+  {
+   "id": "VI-21b",
+   "name": "Significance riders",
+   "maps_to": "[upstream §15 Shallow -ing phrases]",
+   "kind": "regex",
+   "scope": "prose",
+   "strength": "medium",
+   "regex": ",\\s*(?:góp phần|qua đó|từ đó) (?:nâng cao|khẳng định|thúc đẩy|tạo (?:ra|nên)|mang lại|xây dựng|lan tỏa|lan toả)\\b",
+   "ignore_case": true,
+   "multiline": false,
+   "why": "Trailing significance rider (upstream §15).",
+   "fix": "Keep the fact and drop the significance clause.",
+   "examples": {
+    "hit": [
+     "Đơn vị tổ chức 12 lớp tập huấn, góp phần nâng cao năng lực cán bộ."
+    ],
+    "miss": []
+   },
+   "source": "haunguyendev/humanizer-vi; longhang2004/vietnamese-humanizer"
+  },
+  {
+   "id": "VI-21c",
+   "name": "Significance riders",
+   "maps_to": "[upstream §15 Shallow -ing phrases]",
+   "kind": "regex",
+   "scope": "prose",
+   "strength": "medium",
+   "regex": "\\bđánh dấu (?:một )?(?:bước ngoặt|cột mốc|dấu mốc)\\b|\\bmang tính (?:lịch sử|bước ngoặt)\\b",
+   "ignore_case": true,
+   "multiline": false,
+   "why": "Inflated milestone (upstream §13).",
+   "fix": "Keep the fact and drop the significance clause.",
+   "examples": {
+    "hit": [
+     "Sự kiện đánh dấu một bước ngoặt trong ngành."
+    ],
+    "miss": []
+   },
+   "source": "haunguyendev/humanizer-vi; longhang2004/vietnamese-humanizer"
+  },
+  {
+   "id": "VI-22",
+   "name": "Doubled synonyms and stacked sets",
+   "maps_to": "[upstream §6 Forced triads]",
+   "kind": "regex",
+   "scope": "prose",
+   "strength": "weak",
+   "regex": "\\b(?:triển khai thực hiện|tổ chức thực hiện|đảm bảo duy trì|bảo đảm duy trì)\\b|\\bnhanh chóng, kịp thời\\b|\\bkịp thời,? (?:và )?hiệu quả\\b",
+   "ignore_case": true,
+   "multiline": false,
+   "why": "Doubled synonyms. Keep fixed administrative pairs.",
+   "fix": "Keep one word of the pair.",
+   "examples": {
+    "hit": [
+     "Nhóm đã triển khai thực hiện kế hoạch nhanh chóng, kịp thời và hiệu quả."
+    ],
+    "miss": []
+   },
+   "source": "haunguyendev/humanizer-vi"
+  },
+  {
+   "id": "VI-23a",
+   "name": "Borrowed authority, invented numbers, unproven superlatives",
+   "maps_to": "[upstream §17 Borrowed authority]",
+   "kind": "regex",
+   "scope": "prose",
+   "strength": "medium",
+   "regex": "\\b(?:các|nhiều) (?:chuyên gia|nghiên cứu|nhà khoa học|nguồn tin)(?: gần đây)? (?:cho rằng|chỉ ra|nhận định|khẳng định|cho thấy)\\b",
+   "ignore_case": true,
+   "multiline": false,
+   "why": "Unnamed authority. Name the source the text gives, or cut.",
+   "fix": "Name the source the brief gives, or cut the claim; never invent one.",
+   "examples": {
+    "hit": [
+     "Nhiều nghiên cứu chỉ ra phương pháp này tăng năng suất."
+    ],
+    "miss": []
+   },
+   "source": "Brands Vietnam; Luật Quảng cáo 16/2012/QH13"
+  },
+  {
+   "id": "VI-23b",
+   "name": "Borrowed authority, invented numbers, unproven superlatives",
+   "maps_to": "[upstream §17 Borrowed authority]",
+   "kind": "regex",
+   "scope": "marketing",
+   "strength": "medium",
+   "regex": "\\b(?:tốt|nhanh|rẻ|mạnh|an toàn|uy tín|chất lượng|hiện đại|cao cấp|đẳng cấp|hoàn hảo|thông minh|dễ dùng|tiện lợi|bền) nhất\\b|\\bduy nhất\\b|\\bsố (?:1|một) (?:Việt Nam|thị trường|thế giới)\\b|\\bhàng đầu\\b|(?<!người )\\bđứng đầu\\b|\\btop ?1\\b|\\bno\\.? ?1\\b",
+   "ignore_case": true,
+   "multiline": false,
+   "why": "Regulated superlative (Luật Quảng cáo 16/2012, Điều 8 khoản 11). Needs proof; marketing scope only.",
+   "fix": "Name the source the brief gives, or cut the claim; never invent one.",
+   "examples": {
+    "hit": [
+     "Ứng dụng quản lý tài chính tốt nhất Việt Nam."
+    ],
+    "miss": []
+   },
+   "source": "Brands Vietnam; Luật Quảng cáo 16/2012/QH13"
+  },
+  {
+   "id": "VI-24",
+   "name": "Swappable content and set-piece prose",
+   "maps_to": null,
+   "kind": "regex",
+   "scope": "prose",
+   "strength": "weak",
+   "regex": "\\b(?:nuôi dưỡng|bồi đắp|vun đắp|thắp sáng|chắp cánh) (?:tâm hồn|ước mơ|giá trị|nhân cách|đam mê|yêu thương|những giá trị)\\b",
+   "ignore_case": true,
+   "multiline": false,
+   "why": "Ornamental set-piece verbs.",
+   "fix": "Use details the writer supplied; ask when there are none.",
+   "examples": {
+    "hit": [
+     "Lòng biết ơn nuôi dưỡng tâm hồn và thắp sáng ước mơ."
+    ],
+    "miss": []
+   },
+   "source": "see references/sources.md"
+  },
+  {
+   "id": "VI-30a",
+   "name": "Sentence-initial connectors",
+   "maps_to": null,
+   "kind": "regex",
+   "scope": "prose",
+   "strength": "weak",
+   "regex": "(?:^|(?<=[.!?…]\\s))(?:Hơn nữa|Bên cạnh đó|Ngoài ra|Thêm vào đó|Không những thế|Hơn thế nữa|Đồng thời)\\b",
+   "ignore_case": false,
+   "multiline": true,
+   "why": "Sentence-initial connector; flag at two or more per paragraph. Human news ran about 1 per 4,000 words.",
+   "fix": "Move the logic inside the sentence (vì, nên, nhưng) or merge the sentences.",
+   "examples": {
+    "hit": [
+     "Hơn nữa, cách này tiết kiệm chi phí."
+    ],
+    "miss": []
+   },
+   "source": "see references/sources.md"
+  },
+  {
+   "id": "VI-30b",
+   "name": "Sentence-initial connectors",
+   "maps_to": null,
+   "kind": "regex",
+   "scope": "prose",
+   "strength": "medium",
+   "regex": "\\b(?:đồng thời|qua đó|từ đó)\\b[^.!?\\n]{1,120}\\b(?:đồng thời|qua đó|từ đó)\\b",
+   "ignore_case": true,
+   "multiline": false,
+   "why": "Chained connectors inside one sentence.",
+   "fix": "Move the logic inside the sentence (vì, nên, nhưng) or merge the sentences.",
+   "examples": {
+    "hit": [
+     "Hệ thống lưu log, đồng thời gửi cảnh báo, qua đó giúp nhóm phản hồi."
+    ],
+    "miss": []
+   },
+   "source": "see references/sources.md"
+  },
+  {
+   "id": "VI-30c",
+   "name": "Sentence-initial connectors",
+   "maps_to": null,
+   "kind": "regex",
+   "scope": "prose",
+   "strength": "weak",
+   "regex": ",\\s*đồng thời\\b",
+   "ignore_case": true,
+   "multiline": false,
+   "why": "Weak; mid-sentence \"đồng thời\" as all-purpose glue. About 5 times denser in AI news text.",
+   "fix": "Move the logic inside the sentence (vì, nên, nhưng) or merge the sentences.",
+   "examples": {
+    "hit": [
+     "Phương án mới giảm áp lực học tập, đồng thời đánh giá năng lực toàn diện hơn."
+    ],
+    "miss": []
+   },
+   "source": "see references/sources.md"
+  },
+  {
+   "id": "VI-31",
+   "name": "Unanchored glue words",
+   "maps_to": null,
+   "kind": "regex",
+   "scope": "prose",
+   "strength": "weak",
+   "regex": "(?:^|(?<=[.!?…]\\s))(?:Điều này|Việc này|Chính vì vậy|Chính vì thế|Đây (?:chính )?là lý do)\\b",
+   "ignore_case": false,
+   "multiline": true,
+   "why": "Glue word at sentence start; check that it has one clear target.",
+   "fix": "Repeat the noun or merge the sentences so the target is clear.",
+   "examples": {
+    "hit": [
+     "Nhóm đổi lịch và cách tính phí. Điều này áp dụng từ thứ Hai."
+    ],
+    "miss": []
+   },
+   "source": "see references/sources.md"
+  },
+  {
+   "id": "VI-34a",
+   "name": "Listicle shape",
+   "maps_to": "[upstream §19 Bold as decoration]",
+   "kind": "regex",
+   "scope": "prose",
+   "strength": "medium",
+   "regex": "\\bdưới đây là (?:một số|những|các) (?:lợi ích|lý do|cách|mẹo|bước|điểm|yếu tố)\\b",
+   "ignore_case": true,
+   "multiline": false,
+   "why": "Listicle lead-in.",
+   "fix": "Write prose with the specifics, or a list of parallel facts without bold labels.",
+   "examples": {
+    "hit": [
+     "Dưới đây là một số lợi ích:"
+    ],
+    "miss": []
+   },
+   "source": "see references/sources.md"
+  },
+  {
+   "id": "VI-34b",
+   "name": "Listicle shape",
+   "maps_to": "[upstream §19 Bold as decoration]",
+   "kind": "regex",
+   "scope": "prose",
+   "strength": "weak",
+   "regex": "^\\s*[-*+]\\s+\\*\\*[^*\\n]{1,40}:?\\*\\*:?\\s",
+   "ignore_case": false,
+   "multiline": true,
+   "why": "Bold label on a list item (upstream §19); flag when most items carry one.",
+   "fix": "Write prose with the specifics, or a list of parallel facts without bold labels.",
+   "examples": {
+    "hit": [
+     "- **Hiệu suất:** Hiệu suất đã được cải thiện."
+    ],
+    "miss": []
+   },
+   "source": "see references/sources.md"
+  },
+  {
+   "id": "VI-41",
+   "name": "Inferred honorifics",
+   "maps_to": null,
+   "kind": "regex",
+   "scope": "handoff",
+   "strength": "strong",
+   "regex": "\\b(?:anh|chị|em|anh/chị)\\s+(?:ơi|check|kiểm tra|xem|review|test|giúp|nhé)\\b|\\bgiúp em\\b|\\b(?:ạ|nhé|nha|nghen)(?=\\s*[.!?]?\\s*$)",
+   "ignore_case": true,
+   "multiline": true,
+   "why": "Inferred honorific or particle in a Jira/Outline comment.",
+   "fix": "Use subject-free prose or the role name; no inferred honorific.",
+   "examples": {
+    "hit": [
+     "Anh check giúp em bản fix này ạ."
+    ],
+    "miss": []
+   },
+   "source": "see references/sources.md"
+  },
+  {
+   "id": "VI-42",
+   "name": "Faked casualness",
+   "maps_to": null,
+   "kind": "regex",
+   "scope": "prose",
+   "strength": "medium",
+   "regex": "(?<![\\w/.-])(?:ko|k0|dc|đc|ntn|mn|bh)(?![\\w/.-])",
+   "ignore_case": true,
+   "multiline": false,
+   "why": "Teencode in non-chat prose. Ignore inside code, paths and identifiers.",
+   "fix": "Write the full word in neutral Vietnamese.",
+   "examples": {
+    "hit": [
+     "Ko biết cái này có dc ko."
+    ],
+    "miss": []
+   },
+   "source": "see references/sources.md"
+  },
+  {
+   "id": "VI-43",
+   "name": "Chatbot residue",
+   "maps_to": "[upstream §22 Chatbot residue]",
+   "kind": "regex",
+   "scope": "any",
+   "strength": "strong",
+   "regex": "\\bchắc chắn rồi!|\\bcâu hỏi (?:rất|thật|quá) hay\\b|\\blà một (?:mô hình ngôn ngữ|trợ lý AI|AI)\\b|\\btôi chỉ là một AI\\b|\\bdưới đây là (?:phiên bản|bản) (?:đã|được) (?:viết lại|chỉnh sửa|sửa)\\b|\\bnếu bạn (?:cần|muốn)\\b[^.!?\\n]{0,40}\\b(?:mình|tôi) (?:có thể|sẵn sàng)\\b|\\btính đến thời điểm (?:cập nhật|kiến thức)\\b",
+   "ignore_case": true,
+   "multiline": false,
+   "why": "Chatbot residue (upstream §22, §23).",
+   "fix": "Remove the wrapper, keep the content.",
+   "examples": {
+    "hit": [
+     "Chắc chắn rồi! Dưới đây là phiên bản đã chỉnh sửa."
+    ],
+    "miss": []
+   },
+   "source": "see references/sources.md"
+  },
+  {
+   "id": "VI-50a",
+   "name": "English number format",
+   "maps_to": null,
+   "kind": "regex",
+   "scope": "any",
+   "strength": "strong",
+   "regex": "(?<![\\d.,])\\d{1,3}(?:,\\d{3})+(?![\\d,])",
+   "ignore_case": false,
+   "multiline": false,
+   "why": "Comma as thousands separator. Write 1.000.000.",
+   "fix": "Use a period for thousands and a comma for decimals.",
+   "examples": {
+    "hit": [
+     "Giá: 2,500,000 VND"
+    ],
+    "miss": [
+     "Giá: 2.500.000 ₫"
+    ]
+   },
+   "source": "Microsoft Vietnamese Localization Style Guide"
+  },
+  {
+   "id": "VI-50b",
+   "name": "English number format",
+   "maps_to": null,
+   "kind": "regex",
+   "scope": "any",
+   "strength": "medium",
+   "regex": "(?<![\\d.])\\d+\\.\\d{1,2}\\s?(?:triệu|tỷ|nghìn|ngàn|%|km|kg|m²|m2|giờ|phút|GB|MB)(?!\\w)",
+   "ignore_case": true,
+   "multiline": false,
+   "why": "Period as decimal separator. Write 2,5 tỷ.",
+   "fix": "Use a period for thousands and a comma for decimals.",
+   "examples": {
+    "hit": [
+     "Doanh thu 3.6 triệu đồng"
+    ],
+    "miss": [
+     "Khoảng 1.000 km"
+    ]
+   },
+   "source": "Microsoft Vietnamese Localization Style Guide"
+  },
+  {
+   "id": "VI-51",
+   "name": "Title Case or ALL CAPS",
+   "maps_to": "[upstream §20 Decorative headings]",
+   "kind": "regex",
+   "scope": "any",
+   "strength": "medium",
+   "regex": "^#{1,6}[ \\t]+[^\\n]*?(?<![:.!?])[ \\t](?:Của|Và|Với|Cho|Trong|Để|Là|Các|Những|Một|Khi|Từ)[ \\t][^\\n]*$",
+   "ignore_case": false,
+   "multiline": true,
+   "why": "Title Case heading; a capitalised function word mid-heading (a word right after a colon is exempt).",
+   "fix": "Use sentence case.",
+   "examples": {
+    "hit": [
+     "## Tầm Quan Trọng Của Việc Học"
+    ],
+    "miss": [
+     "## Bộ Tài nguyên và Môi trường"
+    ]
+   },
+   "source": "Microsoft Vietnamese Localization Style Guide"
+  },
+  {
+   "id": "VI-52a",
+   "name": "Dash joining clauses",
+   "maps_to": "[upstream §8 Dashes as the universal connector]",
+   "kind": "regex",
+   "scope": "any",
+   "strength": "medium",
+   "regex": "—",
+   "ignore_case": false,
+   "multiline": false,
+   "why": "Em dash (upstream §8). Rewrite with a comma, colon, parentheses or a new sentence.",
+   "fix": "Use a comma, colon, parentheses or a new sentence.",
+   "examples": {
+    "hit": [
+     "Sản phẩm này — vốn được thiết kế tỉ mỉ — sẽ thay đổi cách bạn làm việc."
+    ],
+    "miss": []
+   },
+   "source": "see references/sources.md"
+  },
+  {
+   "id": "VI-52b",
+   "name": "Dash joining clauses",
+   "maps_to": "[upstream §8 Dashes as the universal connector]",
+   "kind": "regex",
+   "scope": "prose",
+   "strength": "weak",
+   "regex": "(?<=\\w) – (?=\\w)",
+   "ignore_case": false,
+   "multiline": false,
+   "why": "Spaced en dash used as a clause joint. Also matches a spaced number range; write ranges as 5-10.",
+   "fix": "Use a comma, colon, parentheses or a new sentence.",
+   "examples": {
+    "hit": [
+     "Kết quả – như đã nói – khá tốt."
+    ],
+    "miss": []
+   },
+   "source": "see references/sources.md"
+  },
+  {
+   "id": "VI-53",
+   "name": "thất bại in UI errors",
+   "maps_to": null,
+   "kind": "regex",
+   "scope": "ui",
+   "strength": "medium",
+   "regex": "\\b(?:lưu|tải(?: lên| xuống| về)?|gửi|kết nối|đăng nhập|cập nhật|xóa|xoá|thanh toán|tạo|sao chép)\\b(?:\\s+[^\\s.,;:!?]+){0,3}?\\s+(?:thất bại|không thành công)\\b",
+   "ignore_case": true,
+   "multiline": false,
+   "why": "Error pattern. Write \"Không lưu được ...\".",
+   "fix": "Write Không X được.",
+   "examples": {
+    "hit": [
+     "Lưu hình ảnh thất bại."
+    ],
+    "miss": []
+   },
+   "source": "Microsoft Vietnamese Localization Style Guide"
+  },
+  {
+   "id": "VI-54",
+   "name": "English-shaped long date",
+   "maps_to": null,
+   "kind": "regex",
+   "scope": "prose",
+   "strength": "weak",
+   "regex": "\\bvào ngày \\d{1,2} tháng \\d{1,2} năm \\d{4}\\b",
+   "ignore_case": true,
+   "multiline": false,
+   "why": "English-shaped long date in prose. Official document headings are exempt.",
+   "fix": "Write the date as dd/mm/yyyy.",
+   "examples": {
+    "hit": [
+     "Vào ngày 15 tháng 10 năm 2021, công ty ra mắt sản phẩm."
+    ],
+    "miss": []
+   },
+   "source": "see references/sources.md"
+  },
+  {
+   "id": "VI-55",
+   "name": "Space before punctuation",
+   "maps_to": null,
+   "kind": "regex",
+   "scope": "any",
+   "strength": "medium",
+   "regex": "(?<=[^\\s\\d]) +[,;!?](?=\\s|$)|(?<=[^\\s\\d:]) +:(?=\\s)",
+   "ignore_case": false,
+   "multiline": false,
+   "why": "Space before punctuation.",
+   "fix": "Remove the space before the punctuation mark.",
+   "examples": {
+    "hit": [
+     "Bạn có thể xem , sửa và xóa ."
+    ],
+    "miss": []
+   },
+   "source": "Microsoft Vietnamese Localization Style Guide"
+  },
+  {
+   "id": "VI-56",
+   "name": "Decomposed (NFD) characters",
+   "maps_to": null,
+   "kind": "regex",
+   "scope": "any",
+   "strength": "strong",
+   "regex": "[̛̣̀́̂̃̆̉]",
+   "ignore_case": false,
+   "multiline": false,
+   "raw": true,
+   "why": "Decomposed (NFD) Vietnamese. Run on raw text before NFC normalisation.",
+   "fix": "Normalise the file to NFC.",
+   "examples": {
+    "hit": [
+     "Việt"
+    ],
+    "miss": []
+   },
+   "source": "see references/sources.md"
+  }
+ ],
+ "manual": [
+  {
+   "id": "VI-12",
+   "name": "Article and plural calque",
+   "maps_to": null,
+   "kind": "manual",
+   "why": "Needs a reader: một and các/những are often correct."
+  },
+  {
+   "id": "VI-32",
+   "name": "Chopped fragments",
+   "maps_to": null,
+   "kind": "manual",
+   "why": "Needs a sentence splitter and a reader."
+  },
+  {
+   "id": "VI-33",
+   "name": "Uniform rhythm and repeated openers",
+   "maps_to": "[upstream §7 Repeated sentence openings]",
+   "kind": "manual",
+   "why": "Sentence-length variance per paragraph; judge by ear."
+  },
+  {
+   "id": "VI-40",
+   "name": "Mixed or wrong address",
+   "maps_to": null,
+   "kind": "manual",
+   "why": "Count pronoun sets across the whole document."
+  }
+ ]
+}

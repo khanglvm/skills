@@ -1,0 +1,4 @@
+interface:
+  display_name: "Humanizer Plus"
+  short_description: "Write or review prose that reads as written by a person, in English or Vietnamese"
+  default_prompt: "Use $humanizer-plus to write or review this deliverable. Follow its load order, then return the final text, or findings only in review mode."
